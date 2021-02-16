@@ -1,5 +1,11 @@
-@extends('admin/layouts/app', ['title' => 'Berita', 'menu' => 'news'])
+@extends('admin/layouts/app', [
+    'title' => 'Berita', 
+    'menu' => 'post',
+	'subMenu' => 'news'
+])
 
 @section('content')
-    hello
+    <div class="container">
+        <h1>Hello</h1>
+    </div>
 @endsection

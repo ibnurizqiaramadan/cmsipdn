@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 $apiPath = API_PATH;
 
 $path = explode("/", $_SERVER['REQUEST_URI']);
@@ -8,8 +10,8 @@ $path = explode("/", $_SERVER['REQUEST_URI']);
 
 if ($path[1] == $apiPath) {
     error_reporting(0);
-    if (isset($_SESSION['TOKEN'])) {
-        if ($_SESSION['TOKEN'] != $_REQUEST['_token']) {
+    if (isset($_SESSION['token'])) {
+        if ($_SESSION['token'] != $_REQUEST['_token']) {
             echo json_encode([
                 'status' => 'fail',
                 'smg' => 'invalid token'
@@ -21,7 +23,15 @@ if ($path[1] == $apiPath) {
             'status' => 'fail',
             'smg' => 'bad request'
         ]);
+        exit(0);
     }
 }
 
 $route["$apiPath/home/news/list"] = 'api/ApiHome';
+
+// get data tables
+$route = array_merge($route, [
+    "$apiPath/data/users"       => 'admin/C_users/data',
+    "$apiPath/data/category"    => 'admin/C_Category/data',
+    "$apiPath/data/news"        => 'admin/C_news/data',
+]);

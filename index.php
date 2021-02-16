@@ -1,4 +1,6 @@
 <?php
+
+// ob_start();
 /**
  * CodeIgniter
  *
@@ -53,6 +55,7 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
+	date_default_timezone_set('Asia/Jakarta');
 	$base_url_ = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
 	$base_url_ .= "://" . $_SERVER['HTTP_HOST'];
 	$base_url_ .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
@@ -60,6 +63,7 @@
 	define('ADMIN_PATH', 'ruangadmin');
 	define('BASE_URL', $base_url_);
 	define('API_PATH', 'api');
+	define('DATE_NOW', date('Y-m-d h:i:s', time()));
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

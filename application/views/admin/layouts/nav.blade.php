@@ -19,14 +19,35 @@
 				</p>
 			</a>
         </li>
-        
-        <li class="nav-item">
-			<a href="{{ base_url(ADMIN_PATH.'/news') }}" class="nav-link @isset($menu) {{ $menu == 'news' ? 'active' : '' }} @endisset">
-				<i class="nav-icon fas fa-newspaper"></i>
+
+		<li class="nav-item @isset($menu) {{ $menu == 'post' ? 'menu-open' : '' }} @endisset">
+			<a href="#" class="nav-link">
+				<i class="nav-icon fas fa-paper-plane"></i>
 				<p>
-					Berita
+					Post
+					<i class="right fas fa-angle-left"></i>
 				</p>
 			</a>
+			<ul class="nav nav-treeview">
+				<li class="nav-item">
+					<a href="{{ base_url(ADMIN_PATH.'/category') }}" class="nav-link @isset($subMenu) {{ $subMenu == 'category' ? 'active' : '' }} @endisset">
+						<i class="fas fa-tags nav-icon"></i>
+						<p>Kategori</p>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a href="{{ base_url(ADMIN_PATH.'/news') }}" class="nav-link @isset($subMenu) {{ $subMenu == 'news' ? 'active' : '' }} @endisset">
+						<i class="fas fa-newspaper nav-icon"></i>
+						<p>Berita</p>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a href="{{ base_url(ADMIN_PATH.'/event') }}" class="nav-link @isset($subMenu) {{ $subMenu == 'event' ? 'active' : '' }} @endisset">
+						<i class="fas fa-calendar-check nav-icon"></i>
+						<p>Event</p>
+					</a>
+				</li>
+			</ul>
 		</li>
         
 		<li class="nav-item">
