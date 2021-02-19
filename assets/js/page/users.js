@@ -235,8 +235,7 @@ $(document).ready((function () {
 			enableButton()
 		},
 		success: function (e) {
-			console.log(e)
-			validate(e.validate.input), e.validate.success && ("ok" == e.status ? (toastSuccess(e.message), refreshTable(), clearInput(e.validate.input)) : toastWarning(e.message))
+			1==e.modalClose&&$("#modalForm").modal("hide"),validate(e.validate.input),e.validate.success&&("ok"==e.status?(toastSuccess(e.message),refreshTable(),clearInput(e.validate.input)):toastWarning(e.message));
 		},
 		error: function(err) {
 			errorCode(err)

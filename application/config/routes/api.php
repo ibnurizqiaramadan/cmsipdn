@@ -38,8 +38,8 @@ $route = array_merge($route, [
 
 // get data options
 $route = array_merge($route, [
-    "$apiPath/data/options"           => 'admin/C_api/getDataOption',
-    "$apiPath/data/options/(:any)"    => 'admin/C_api/getDataOption/$1',
+    "$apiPath/data/options"           => 'api/ApiAdmin/getDataOption',
+    "$apiPath/data/options/(:any)"    => 'api/ApiAdmin/getDataOption/$1',
 ]);
 
 //get row data

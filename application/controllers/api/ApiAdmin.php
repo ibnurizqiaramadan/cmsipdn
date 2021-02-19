@@ -1,6 +1,6 @@
 <?php
 
-class C_api extends CI_Controller
+class ApiAdmin extends CI_Controller
 {
     function __construct()
     {
@@ -27,16 +27,7 @@ class C_api extends CI_Controller
             $data_ = $this->db->get($table[$data])->result_array();
             $resultData = [];
             foreach ($data_ as $rows) {
-                foreach ($table[$data]['protected'] as $protect) {
-                    $param = explode(":", $protect);
-                    if (count($param) > 1) {
-                        if ($param[1] == "hash") {
-                            $rows[$param[0]] = $this->req->acak($rows[$param[0]]);
-                        }
-                    } else {
-                        unset($rows[$protect]);
-                    }
-                }
+                $rows = Guard($rows, $table[$data]['protected']);
                 unset($rows['created_at']);
                 $resultData[]  = $rows;
             }

@@ -110,7 +110,7 @@ class C_users extends CI_Controller
                 'name' => 'required|min:6|name',
                 'role' => 'required|number'
             ]);
-            // $this->req->print($_POST);
+
             if (!$validate['success']) throw new Exception("Error Processing Request");
             if (!Update($this->table, Guard($validate['data'], ['id', 'token']), [$this->req->encKey('id') => Input_('id')])) throw new Exception("Tidak ada perubahan");
 
@@ -132,6 +132,7 @@ class C_users extends CI_Controller
                 'message' => $ex->getMessage()
             ];
         } finally {
+            $message = array_merge($message, ['modalClose' => true]);
             echo json_encode($message);
         }
     }
