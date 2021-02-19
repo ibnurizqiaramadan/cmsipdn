@@ -35,3 +35,14 @@ $route = array_merge($route, [
     "$apiPath/data/category"    => 'admin/C_Category/data',
     "$apiPath/data/news"        => 'admin/C_news/data',
 ]);
+
+// get data options
+$route = array_merge($route, [
+    "$apiPath/data/options"           => 'admin/C_api/getDataOption',
+    "$apiPath/data/options/(:any)"    => 'admin/C_api/getDataOption/$1',
+]);
+
+//get row data
+$route = array_merge($route, [
+    "$apiPath/data/users/get/(:any)"  => 'admin/C_users/getData/$1',
+]);

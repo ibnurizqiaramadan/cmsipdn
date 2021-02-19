@@ -1,6 +1,6 @@
 const BASE_URL = $('meta[name="baseUrl"]').attr("content"),
 	ADMIN_PATH = BASE_URL + $('meta[name="adminPath"]').attr("content"),
-	API_PATH = BASE_URL + $('meta[name="apiPath"]').attr("content"),
+	API_PATH = BASE_URL + $('meta[name="apiPath"]').attr("content") + "/",
 	TOKEN = $('meta[name="_token"]').attr("content");
 var table, table1;
 
@@ -183,11 +183,12 @@ function addFloatingButton(options = {}) {
 	const float = $("#floatButton")
 	if (float.html().trim() == '') {
 		const path = options.path ?? BASE_URL
+		const table = options.table
 		const button = {
-			"reset": `<a href="#" title="Reset" id="itemFloat" data-action="reset" data-path="${path}" class="bg-info"><i class="fas fa-sync"></i></a>`,
-			"delete": `<a href="#" title="Hapus" id="itemFloat" data-action="delete" data-path="${path}" class="bg-danger"><i class="fas fa-trash-alt"></i></a>`,
-			"active": `<a href="#" title="Aktifkan" id="itemFloat" data-action="active" data-path="${path}" class="bg-success"><i class="fas fa-toggle-on"></i></a>`,
-			"deactive": `<a href="#" title="Non-Aktifkan" id="itemFloat" data-action="deactive" data-path="${path}" class="bg-danger"><i class="fas fa-toggle-off"></i></a>`
+			"reset": `<a href="#" title="Reset" id="itemFloat" data-action="reset" data-path="${path}" data-table="${table}" class="bg-info"><i class="fas fa-sync"></i></a>`,
+			"delete": `<a href="#" title="Hapus" id="itemFloat" data-action="delete" data-path="${path}" data-table="${table}" class="bg-danger"><i class="fas fa-trash-alt"></i></a>`,
+			"active": `<a href="#" title="Aktifkan" id="itemFloat" data-action="active" data-path="${path}" data-table="${table}" class="bg-success"><i class="fas fa-toggle-on"></i></a>`,
+			"deactive": `<a href="#" title="Non-Aktifkan" id="itemFloat" data-action="deactive" data-path="${path}" data-table="${table}" class="bg-danger"><i class="fas fa-toggle-off"></i></a>`
 		}
 		let buttonList = ''
 		let items = options.buttons ?? []
@@ -206,10 +207,82 @@ function addFloatingButton(options = {}) {
 	}
 }
 
+function clearFormInput(formBody) {
+	$(formBody).html('')
+}
+
+function addFormInput(formBody, inputForm = {}) {
+	let html = $(formBody).html()
+	let cek = 0
+	Object.keys(inputForm).forEach(index => {
+		const options = inputForm[index]
+		if ($(`[name='${options.name}']`).length == 0) {
+			cek += 1
+			let selectOptionList = ''
+			if (options.data) {
+				selectOptionList += `<option selected disabled> --- Pilih --- </option>`
+				Object.keys(options.data).forEach(value => {
+					const caption = options.data[value]
+					selectOptionList += `<option value='${value}'>${caption}</option>`
+				});
+			}
+			if (options.api) {
+				let api = options.api
+				let postData = {_token : TOKEN}
+				if (api.where) postData.where = api.where
+				if (api.order) postData.order = api.order
+				$.ajax({
+					url: api.url,
+					data: postData,
+					type: api.type,
+					dataType: "JSON",
+					success: function(result) {
+						if (result.status == 'fail') return toastError(result.message)
+						selectOptionList += `<option selected disabled> --- Pilih --- </option>`
+						Object.keys(result.data).forEach(index => {
+							let caption = api.option.caption
+							let value = ''
+							const row = result.data[index]
+							Object.keys(row).forEach(field => {
+								caption = caption.replace(new RegExp(`{${field}}`, "g"), row[field])
+							})
+							value = row[api.option.value]
+							selectOptionList += `<option value='${value}'>${caption}</option>`
+							$(`[name="${options.name}"]`).html(selectOptionList)
+						})
+					},
+					error: function(err) {
+						errorCode(err)
+					}
+				})
+			}
+			const inputType = {
+				"hidden"   : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="hidden" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
+				"text"     : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="text" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
+				"password" : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="password" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
+				"number"   : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="number" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
+				"select"   : `<select class="${options.class ?? "form-control"}" ${options.attr ?? ""} name="${options.name}" ${options.id ? `id="${options.id}"` : ''}>${selectOptionList}</select>`,
+				"select2"  : `<select class="${options.class ?? "form-control select2-"}${options.name}" ${options.attr ?? ""} name="${options.name}" ${options.id ? `id="${options.id}"` : ''}>${selectOptionList}</select><script>$('.select2-${options.name}').select2({theme: 'bootstrap4'})</script>`,
+			}
+			html += `
+				<div class="form-group ${options.type == "hidden" ? 'd-none' : ''}">
+					<label>${options.label ?? "Input"}</label>
+					${inputType[options.type]}
+					<div id='validate_${options.name}'></div>
+				</div>
+			`
+		}
+	})
+	if (cek != 0) {
+		$(formBody).html(html)
+	}
+}
+
 $(document).delegate('a[id="itemFloat"]', 'click', function (e) {
 	e.preventDefault()
-	const action = $(this).data('action')
+	var action = $(this).data('action')
 	const url = $(this).data('path')
+	const table = $($(this).data('table')).DataTable()
 	const dataId = $("#checkedListData").val().substr(0, $("#checkedListData").val().length - 1)
 	const jmlData = dataId.split(",").length
 	const message = {
@@ -220,14 +293,16 @@ $(document).delegate('a[id="itemFloat"]', 'click', function (e) {
 	}
 	confirmSweet(message[action]).then(result => {
 		if (isConfirmed(result)) {
+			let formData = {
+				_token : TOKEN,
+				dataId : dataId
+			} 
+			if (action == "active" || action == "deactive") formData.action = action, action = 'set'
 			$.ajax({
 				url: `${url}${action}-multiple`,
 				type: "POST",
 				dataType: "JSON",
-				data: {
-					_token: TOKEN,
-					dataId: dataId
-				},
+				data: formData,
 				beforeSend: function () {
 					disableButton()
 				},
@@ -235,7 +310,7 @@ $(document).delegate('a[id="itemFloat"]', 'click', function (e) {
 					enableButton()
 				},
 				success: function (result) {
-					console.log(result)
+					"ok" == result.status ? (msgSweetSuccess(result.message), table.ajax.reload(null, false), $("#checkedListData").val("")) : msgSweetError(result.message)
 				},
 				error: function (error) {
 					errorCode(error)

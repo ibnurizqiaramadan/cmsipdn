@@ -14,7 +14,7 @@ function setStatus(status, id) {
 				beforeSend: function () {
 					disableButton()
 				},
-				complete: function() {
+				complete: function () {
 					enableButton()
 				},
 				success: function (result) {
@@ -43,13 +43,11 @@ $(document).ready((function () {
 				_token: TOKEN
 			},
 			complete: function () {
-				checkPilihan(
-					{
-						table: "#listUser",
-						buttons : ['reset', 'delete', 'active', 'deactive'], 
-						path : CURRENT_PATH
-					}
-				)
+				checkPilihan({
+					table: "#listUser",
+					buttons: ['reset', 'delete', 'active', 'deactive'],
+					path: CURRENT_PATH
+				})
 			},
 			error: function (error) {
 				errorCode(error)
@@ -95,7 +93,7 @@ $(document).ready((function () {
 			targets: [5],
 			orderable: !0,
 			render: function (data, type, row) {
-				return "<button class='btn btn-danger btn-sm' id='delete' data-id=" + row.id + " title='Hapus Data'><i class='fas fa-trash-alt'></i></button> \n <button class='btn btn-warning btn-sm' id='edit' data-id=" + row.id + " title='Edit Data'><i class='fas fa-pencil-alt'></i></button> \n <button class='btn btn-info btn-sm' id='reset' data-id=" + row.id + " title='Reset Ulang Kata Sandi'><i class='fas fa-sync-alt'></i></button>"
+				return "<button class='btn btn-danger btn-sm' id='delete' data-id=" + row.id + " title='Hapus Data'><i class='fas fa-trash-alt'></i></button> \n <button class='btn btn-warning btn-sm' id='edit' data-id=" + row.id + " title='Edit Data'><i class='fas fa-pencil-alt'></i></button> \n <button class='btn btn-info btn-sm' id='reset' data-id=" + row.id + " title='Reset Password'><i class='fas fa-sync-alt'></i></button>"
 			}
 		}]
 	})
@@ -125,7 +123,45 @@ $(document).ready((function () {
 	})
 })), $("#listUser").delegate("#edit", "click", (function () {
 	let id = $(this).data("id");
-	alert(id)
+	$.ajax({
+		url: API_PATH + "data/users/get/" + id,
+		type: "post",
+		data: {_token: TOKEN},
+		dataType: "json",
+		beforeSend: function() {
+			disableButton()
+			clearFormInput("#formBody")
+			addFormInput("#formBody", [{
+				type: "hidden",
+				name: "id"
+			},{
+				type: "text",
+				name: "username",
+				label: "Username",
+			}, {
+				type: "text",
+				name: "name",
+				label: "Nama",
+			}, {
+				type: "select2",
+				name: "role",
+				label: "Level",
+				data: {
+					0:"User",
+					1:"Admin",
+				}
+			}])
+		}, 
+		complete: function() {
+			enableButton()
+		},
+		success: function(result) {
+			"ok" == result.status ? ($("#modalForm").modal('show'),$("#modalTitle").html('Edit Pengguna'),$("#formInput").attr('action', CURRENT_PATH + "update"), FillForm(result.data)) : msgSweetError(result.message)
+		},
+		error: function(err) {
+			errorCode(err)
+		}
+	})
 })), $("#listUser").delegate("#reset", "click", (function (e) {
 	confirmSweet("Anda yakin ingin mereset password ?").then((result) => {
 		if (isConfirmed(result)) {
@@ -157,5 +193,53 @@ $(document).ready((function () {
 })), $("#listUser").delegate("#off", "click", (function () {
 	setStatus("on", $(this).data("id"))
 })), setInterval(() => {
-	// refreshTable()
-}, 3e4);
+	refreshTable()
+}, 3e4), $("#btnAdd").on('click', function () {
+	clearFormInput("#formBody")
+	addFormInput("#formBody", [{
+		type: "text",
+		name: "username",
+		label: "Username"
+	}, {
+		type: "text",
+		name: "name",
+		label: "Nama",
+	}, {
+		type: "select2",
+		name: "role",
+		label: "Level",
+		data: {
+			0:"User",
+			1:"Admin",
+		}
+	}])
+	$("#modalForm").modal('show')
+	$("#modalTitle").html('Tambah Pengguna')
+	$("#formInput").attr('action', CURRENT_PATH + "store")
+}), $("#formInput").submit(function(e) {
+	e.preventDefault()
+	let formData = new FormData(this)
+	formData.append("_token", TOKEN)
+	$.ajax({
+		url: $(this).attr('action'),
+		type: "post",
+		data: formData, 
+		processData: !1,
+		contentType: !1,
+		cache: !1,
+		dataType: "JSON",
+		beforeSend: function () {
+			disableButton()	
+		},
+		complete: function () {
+			enableButton()
+		},
+		success: function (e) {
+			console.log(e)
+			validate(e.validate.input), e.validate.success && ("ok" == e.status ? (toastSuccess(e.message), refreshTable(), clearInput(e.validate.input)) : toastWarning(e.message))
+		},
+		error: function(err) {
+			errorCode(err)
+		}
+	})
+});

@@ -45,6 +45,16 @@ function Update($table, $data, $where, $json = false)
             'updated_at' => DATE_NOW
         ]);
         $CI->db->where($where);
+        $tampungGetData = $CI->db->get($table)->row_array();
+        // $CI->req->query();
+        $cekEdit = 0;
+        foreach ($data as $key => $value) {
+            // echo $value . " | ";
+            if ($tampungGetData[$key] != $value) $cekEdit++;
+            // echo "(" . $tampungGetData[$key] . " | " . $value . ") = " . $cekEdit . " || ";
+        }
+        if ($cekEdit <= 1) return false;
+        $CI->db->where($where);
         $CI->db->update($table, $data);
         $return_ = $CI->req->cekPerubahan();
         if ($return_ == false) throw new Exception("Gagal mengupdate data");
@@ -353,9 +363,20 @@ function ValidateAdd($validate, $input, $message)
 
 function Guard($data, $guard)
 {
+    $CI = &get_instance();
     $result = $data;
-    foreach ($guard as $key) {
-        unset($result[$key]);
+    // foreach ($guard as $key) {
+    //     unset($result[$key]);
+    // }
+    foreach ($guard as $protect) {
+        $param = explode(":", $protect);
+        if (count($param) > 1) {
+            if ($param[1] == "hash") {
+                $result[$param[0]] = $CI->req->acak($result[$param[0]]);
+            }
+        } else {
+            unset($result[$protect]);
+        }
     }
     return $result;
 }

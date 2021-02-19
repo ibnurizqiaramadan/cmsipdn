@@ -41,32 +41,35 @@ $route["$adminPath/dashboard"] = 'admin/C_dashboard';
 $controller = "C_users";
 $path = "users";
 $route = array_merge($route, [
-    "$adminPath/$path"                  => "admin/$controller",
-    "$adminPath/$path/store"            => "admin/$controller/store",
-    "$adminPath/$path/delete"           => "admin/$controller/delete",
-    "$adminPath/$path/update"           => "admin/$controller/update",
-    "$adminPath/$path/reset/(:any)"     => "admin/$controller/reset/$1",
-    "$adminPath/$path/set/(:any)"       => "admin/$controller/set_/$1",
+    "$adminPath/$path"                   => "admin/$controller",
+    "$adminPath/$path/store"             => "admin/$controller/store",
+    "$adminPath/$path/delete"            => "admin/$controller/delete",
+    "$adminPath/$path/update"            => "admin/$controller/update",
+    "$adminPath/$path/reset/(:any)"      => "admin/$controller/reset/$1",
+    "$adminPath/$path/set/(:any)"        => "admin/$controller/set_/$1",
+    "$adminPath/$path/delete-multiple"   => "admin/$controller/deleteMultiple",
+    "$adminPath/$path/reset-multiple"    => "admin/$controller/resetMultiple",
+    "$adminPath/$path/set-multiple"      => "admin/$controller/setMultiple",
 ]);
 
 // category route
 $controller = "C_category";
 $path = "category";
 $route = array_merge($route, [
-    "$adminPath/$path"                  => "admin/$controller",
-    "$adminPath/$path/store"            => "admin/$controller/store",
-    "$adminPath/$path/delete"           => "admin/$controller/delete",
-    "$adminPath/$path/update"           => "admin/$controller/update",
+    "$adminPath/$path"                   => "admin/$controller",
+    "$adminPath/$path/store"             => "admin/$controller/store",
+    "$adminPath/$path/delete"            => "admin/$controller/delete",
+    "$adminPath/$path/update"            => "admin/$controller/update",
 ]);
 
 // news route
 $controller = "C_news";
 $path = "news";
 $route = array_merge($route, [
-    "$adminPath/$path"                  => "admin/$controller",
-    "$adminPath/$path/store"            => "admin/$controller/store",
-    "$adminPath/$path/delete"           => "admin/$controller/delete",
-    "$adminPath/$path/update"           => "admin/$controller/update",
-    "$adminPath/$path/set"              => "admin/$controller/set",
+    "$adminPath/$path"                   => "admin/$controller",
+    "$adminPath/$path/store"             => "admin/$controller/store",
+    "$adminPath/$path/delete"            => "admin/$controller/delete",
+    "$adminPath/$path/update"            => "admin/$controller/update",
+    "$adminPath/$path/set"               => "admin/$controller/set",
 ]);
 
