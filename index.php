@@ -63,8 +63,8 @@
 	define('ADMIN_PATH', 'ruangadmin');
 	define('BASE_URL', $base_url_);
 	define('API_PATH', 'api');
-	define('ASSETS_PATH', 'assets');
-	define('UPLOADS_PATH', 'uploads');
+	define('ASSETS_PATH', BASE_URL . 'assets');
+	define('UPLOADS_PATH', BASE_URL . 'uploads');
 	define('DATE_NOW', date('Y-m-d h:i:s', time()));
 /*
  *---------------------------------------------------------------
