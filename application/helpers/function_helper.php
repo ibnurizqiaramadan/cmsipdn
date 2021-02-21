@@ -140,7 +140,7 @@ function Validate($data, $guarded = [])
                         'input'   => $key,
                         'type'    => $request_,
                         'valid'   => false,
-                        'message' => str_replace('$key', $key, $validate[$request_]),
+                        'message' => str_replace(['$key', '_', '-'], [$key, ' ', ' '], $validate[$request_]),
                     ];
                     $errorCount++;
                     break;
