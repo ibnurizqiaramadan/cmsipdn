@@ -44,5 +44,6 @@ $route = array_merge($route, [
 
 //get row data
 $route = array_merge($route, [
-    "$apiPath/data/users/get/(:any)"  => 'admin/C_users/getData/$1',
+    "$apiPath/data/users/get/(:any)"     => 'admin/C_users/getData/$1',
+    "$apiPath/data/category/get/(:any)"  => 'admin/C_category/getData/$1',
 ]);

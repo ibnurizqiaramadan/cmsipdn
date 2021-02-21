@@ -112,7 +112,7 @@ class C_users extends CI_Controller
             ]);
 
             if (!$validate['success']) throw new Exception("Error Processing Request");
-            if (!Update($this->table, Guard($validate['data'], ['id', 'token']), [$this->req->encKey('id') => Input_('id')])) throw new Exception("Tidak ada perubahan");
+            if (!Update($this->table, Guard($validate['data'], ['id', 'token', 'password', 'active']), [$this->req->encKey('id') => Input_('id')])) throw new Exception("Tidak ada perubahan");
 
             $message = [
                 'status' => 'ok',

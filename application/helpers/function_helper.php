@@ -329,25 +329,25 @@ function Validate($data, $guarded = [])
             'success' => false
         ];
     } else {
-        $request = $_SERVER['REQUEST_METHOD'] == "POST" ? $_POST : $_GET;
-        unset($request['_token']);
-        foreach ($request as $key => $value) {
-            $result[$key] = Input_($key);
+        $setField = array_merge($data, $guarded);
+        $request = [];
+        foreach ($setField as $key => $value) {
+            $request[$key] = Input_($key);
         }
         if ($guarded != null) {
             foreach ($guarded as $guard_ => $value) {
                 if ($value == false) {
-                    unset($result[$guard_]);
+                    unset($request[$guard_]);
                 } else {
-                    unset($result[$guard_]);
-                    $result[$guard_] = $value;
+                    unset($request[$guard_]);
+                    $request[$guard_] = $value;
                 }
             }
         }
         return [
             'success' => true,
             'input' => $error,
-            'data' => $result,
+            'data' => $request,
         ];
     }
 }
@@ -365,9 +365,6 @@ function Guard($data, $guard)
 {
     $CI = &get_instance();
     $result = $data;
-    // foreach ($guard as $key) {
-    //     unset($result[$key]);
-    // }
     foreach ($guard as $protect) {
         $param = explode(":", $protect);
         if (count($param) > 1) {

@@ -257,7 +257,7 @@ function addFormInput(formBody, inputForm = {}) {
 				})
 			}
 			const inputType = {
-				"hidden"   : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="hidden" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
+				"hidden"   : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="hidden" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} readonly>`,
 				"text"     : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="text" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
 				"password" : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="password" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
 				"number"   : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="number" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,

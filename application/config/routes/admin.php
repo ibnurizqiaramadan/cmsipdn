@@ -60,6 +60,7 @@ $route = array_merge($route, [
     "$adminPath/$path/store"             => "admin/$controller/store",
     "$adminPath/$path/delete"            => "admin/$controller/delete",
     "$adminPath/$path/update"            => "admin/$controller/update",
+    "$adminPath/$path/delete-multiple"   => "admin/$controller/deleteMultiple",
 ]);
 
 // news route
