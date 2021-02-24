@@ -389,6 +389,16 @@ function InputTags($input)
     return htmlspecialchars(trim(rtrim($_REQUEST[$input])));
 }
 
+function getAssetsFiles($path, $js = false)
+{
+    return $js == true ? ("<script src='" . ASSETS_PATH . $path . "' defer></script>") : ASSETS_PATH . $path;
+}
+
+function getUploadsFiles($path)
+{
+    return UPLOADS_PATH . $path;
+}
+
 function iLove($someone)
 {
     return "i love u $someone 💖";

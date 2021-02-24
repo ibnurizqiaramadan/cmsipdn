@@ -6,17 +6,20 @@ $adminPath = ADMIN_PATH;
 
 $path = explode("/", $_SERVER['REQUEST_URI']);
 
-if ($path[1] == $adminPath) {
+$pathCek = $path[1] == APP_FOLDER ? $path[2] : $path[1];
+$pathCekLogin = $path[1] == APP_FOLDER ? $path[3] ?? '' : $path[2] ?? '';
+
+if ($pathCek == $adminPath) {
     if (!isset($_SESSION['token'])) {
         error_reporting(0);
-        if ($path[2] != 'login') {
+        if ($pathCekLogin != 'login') {
             echo "<meta http-equiv='refresh' content='0;url=" . BASE_URL . ADMIN_PATH . "/login'/>";
             exit(0);
         }
     } else {
         error_reporting(0);
-        if ($_SERVER['REQUEST_METHOD'] == "POST" && $path[2] != "login") {
-            if ($_SESSION['token'] != $_REQUEST['_token']) {
+        if ($_SERVER['REQUEST_METHOD'] == "POST" && $pathCekLogin != "login") {
+            if (base64Enc($_SESSION['token'], 3) != $_REQUEST['_token']) {
                 echo json_encode([
                     'status' => 'fail',
                     'smg' => 'invalid token'

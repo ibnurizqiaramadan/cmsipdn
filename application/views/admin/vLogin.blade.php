@@ -43,4 +43,4 @@
 </body>
 
 @include('admin.layouts.js')
-<script src="{{ base_url('assets/js/page/login.js') }}"></script>
+<script src="{{ base_url('assets/js/page/login.js') }}" defer></script>

@@ -220,7 +220,7 @@ function addFormInput(formBody, inputForm = {}) {
 			cek += 1
 			let selectOptionList = ''
 			if (options.data) {
-				selectOptionList += `<option selected disabled> --- Pilih --- </option>`
+				if ("selectMultiple" != options.type) selectOptionList += `<option selected disabled> --- Pilih --- </option>`
 				Object.keys(options.data).forEach(value => {
 					const caption = options.data[value]
 					selectOptionList += `<option value='${value}'>${caption}</option>`
@@ -238,7 +238,7 @@ function addFormInput(formBody, inputForm = {}) {
 					dataType: "JSON",
 					success: function(result) {
 						if (result.status == 'fail') return toastError(result.message)
-						selectOptionList += `<option selected disabled> --- Pilih --- </option>`
+						if ("selectMultiple" != options.type) selectOptionList += `<option selected disabled> --- Pilih --- </option>`
 						Object.keys(result.data).forEach(index => {
 							let caption = api.option.caption
 							let value = ''
@@ -248,7 +248,7 @@ function addFormInput(formBody, inputForm = {}) {
 							})
 							value = row[api.option.value]
 							selectOptionList += `<option value='${value}'>${caption}</option>`
-							$(`[name="${options.name}"]`).html(selectOptionList)
+							options.dataType ? $(`.select2-${options.name}`).html(selectOptionList) : $(`[name="${options.name}"]`).html(selectOptionList)
 						})
 					},
 					error: function(err) {
@@ -263,11 +263,13 @@ function addFormInput(formBody, inputForm = {}) {
 				"number"   : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="number" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
 				"select"   : `<select class="${options.class ?? "form-control"}" ${options.attr ?? ""} name="${options.name}" ${options.id ? `id="${options.id}"` : ''}>${selectOptionList}</select>`,
 				"select2"  : `<select class="${options.class ?? "form-control select2-"}${options.name}" ${options.attr ?? ""} name="${options.name}" ${options.id ? `id="${options.id}"` : ''}>${selectOptionList}</select><script>$('.select2-${options.name}').select2({theme: 'bootstrap4'})</script>`,
+				"selectMultiple"  : `<select class="${options.class ?? "form-control select2-"}${options.name}" ${options.attr ?? ""} multiple="multiple" ${options.dataType ? '' : `name="${options.name}"`} ${options.id ? `id="${options.id}"` : ''}>${selectOptionList}</select><script>$('.select2-${options.name}').select2({theme: 'bootstrap4'}), $('.select2-${options.name}').on('change',function() {$('#select2-${options.name}-result').val(JSON.stringify($(this).val()).replace('[]',''))})</script>`,
 			}
 			html += `
 				<div class="form-group ${options.type == "hidden" ? 'd-none' : ''}">
 					<label>${options.label ?? "Input"}</label>
 					${inputType[options.type]}
+					${options.dataType?.toLowerCase() == "json" ? `<input type="hidden" id='select2-${options.name}-result' name='${options.name}'></input>`: ''}
 					<div id='validate_${options.name}'></div>
 				</div>
 			`

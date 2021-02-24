@@ -63,9 +63,27 @@
 	define('ADMIN_PATH', 'ruangadmin');
 	define('BASE_URL', $base_url_);
 	define('API_PATH', 'api');
+	define('APP_FOLDER', 'ipdncms');
 	define('ASSETS_PATH', BASE_URL . 'assets/');
 	define('UPLOADS_PATH', BASE_URL . 'uploads/');
 	define('DATE_NOW', date('Y-m-d h:i:s', time()));
+	function base64Enc($text, $times = 1)
+	{
+		if ($times == 1) return base64_encode($text);
+		for ($i = 0; $i < $times; $i++) {
+			$text = base64_encode($text);
+		}
+		return $text;
+	}
+
+	function base64Dec($text, $times = 1)
+	{
+		if ($times == 1) return base64_decode($text);
+		for ($i = 0; $i < $times; $i++) {
+			$text = base64_decode($text);
+		}
+		return $text;
+	}
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

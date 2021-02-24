@@ -71,7 +71,7 @@ class C_login extends CI_Controller
     {
         try {
             $token = $this->input->post('_token');
-            if ($this->session->token != $token) throw new Exception("invalid token");
+            if (base64Enc($this->session->token, 3) != $token) throw new Exception("invalid token");
 
             $this->session->sess_destroy();
 

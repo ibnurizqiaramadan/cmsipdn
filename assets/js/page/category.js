@@ -1,33 +1,5 @@
 let CURRENT_PATH = ADMIN_PATH + "/category/";
 
-function setStatus(status, id) {
-	confirmSweet("Anda yakin ingin merubah status ?").then(result => {
-		if (isConfirmed(result)) {
-			result && $.ajax({
-				url: CURRENT_PATH + "set/" + id,
-				data: {
-					_token: TOKEN,
-					status: status
-				},
-				type: "POST",
-				dataType: "JSON",
-				beforeSend: function () {
-					disableButton()
-				},
-				complete: function () {
-					enableButton()
-				},
-				success: function (result) {
-					"ok" == result.status ? (refreshTable(), toastSuccess(result.message)) : (enableButton(), toastError(result.message, "Gagal"))
-				},
-				error: function (error) {
-					errorCode(error)
-				}
-			})
-		}
-	})
-}
-
 function refreshTable() {
 	table.ajax.reload(null, !1)
 }
@@ -45,7 +17,7 @@ $(document).ready((function () {
 			complete: function () {
 				checkPilihan({
 					table: "#listUser",
-					buttons: ['reset', 'delete', 'active', 'deactive'],
+					buttons: ['delete'],
 					path: CURRENT_PATH
 				})
 			},
@@ -171,9 +143,9 @@ $(document).ready((function () {
         name: "name",
         label: "Kategori",
     }])
-	$("#modalForm").modal('show')
 	$("#modalTitle").html('Tambah Pengguna')
 	$("#formInput").attr('action', CURRENT_PATH + "store")
+	$("#modalForm").modal('show')
 }), $("#formInput").submit(function(e) {
 	e.preventDefault()
 	let formData = new FormData(this)
@@ -193,7 +165,7 @@ $(document).ready((function () {
 			enableButton()
 		},
 		success: function (e) {
-			1==e.modalClose&&$("#modalForm").modal("hide"),validate(e.validate.input),e.validate.success&&("ok"==e.status?(toastSuccess(e.message),refreshTable(),clearInput(e.validate.input)):toastWarning(e.message));
+			validate(e.validate.input),e.validate.success&&("ok"==e.status?(toastSuccess(e.message),refreshTable(),1==e.modalClose&&$("#modalForm").modal("hide"),clearInput(e.validate.input)):toastWarning(e.message));
 		},
 		error: function(err) {
 			errorCode(err)

@@ -69,5 +69,5 @@
 @endsection
 
 @section('js')
-<script src="{{ base_url('assets/js/page/category.js') }}"></script>
+<script src="{{ base_url('assets/js/page/category.js') }}" defer></script>
 @endsection

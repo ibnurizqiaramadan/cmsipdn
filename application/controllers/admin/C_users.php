@@ -80,23 +80,21 @@ class C_users extends CI_Controller
             
             $message = [
                 'status' => 'ok',
-                'validate' => $validate,
                 'message' => "Berhasil memasukan data"
             ];
 
         } catch (\Throwable $th) {
             $message = [
                 'status' => 'fail',
-                'validate' => $validate,
                 'message' => $th->getMessage()
             ];
         } catch (\Exception $ex) {
             $message = [
                 'status' => 'fail',
-                'validate' => $validate,
                 'message' => $ex->getMessage()
             ];
         } finally {
+            $message = array_merge($message, ['validate' => $validate]);
             echo json_encode($message);
         }
     }
@@ -116,23 +114,20 @@ class C_users extends CI_Controller
 
             $message = [
                 'status' => 'ok',
-                'validate' => $validate,
                 'message' => "Berhasil merubah data"
             ];
         } catch (\Throwable $th) {
             $message = [
                 'status' => 'fail',
-                'validate' => $validate,
                 'message' => $th->getMessage()
             ];
         } catch (\Exception $ex) {
             $message = [
                 'status' => 'fail',
-                'validate' => $validate,
                 'message' => $ex->getMessage()
             ];
         } finally {
-            $message = array_merge($message, ['modalClose' => true]);
+            $message = array_merge($message, ['validate' => $validate, 'modalClose' => true]);
             echo json_encode($message);
         }
     }

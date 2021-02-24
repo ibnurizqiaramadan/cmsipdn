@@ -6,9 +6,9 @@
 	<meta name="baseUrl" content="{{ base_url() }}">
 	<meta name="adminPath" content="{{ ADMIN_PATH }}">
 	<meta name="apiPath" content="{{ API_PATH }}">
-	<meta name="_token" content="{{ $_SESSION['token'] }}">
+	<meta name="_token" content="{{ base64Enc($_SESSION['token'], 3) }}">
 	<title>IPDN | {{ $title ?? 'Administrator' }}</title>
-	<link rel="shortcut icon" type="image/jpg" href="https://rumahscript.com/demo/ipdn/wp-content/uploads/2019/04/mainlogo.png"/>
+	<link rel="shortcut icon" type="image/jpg" href="{{ getAssetsFiles('img/mainlogo.png') }}"/>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 	<link rel="stylesheet" href="{{ base_url('assets/admin/') }}plugins/fontawesome-free/css/all.min.css">
 	<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
@@ -20,5 +20,5 @@
 	<link rel="stylesheet" href="{{ base_url('assets/admin/') }}plugins/select2/css/select2.min.css">
   	<link rel="stylesheet" href="{{ base_url('assets/admin/') }}plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 	<link rel="stylesheet" href="{{ base_url('assets/modules/iziToast.min.css') }}">
-	@yield('head')
+@yield('head')
 </head>

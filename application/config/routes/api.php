@@ -6,12 +6,13 @@ $apiPath = API_PATH;
 
 $path = explode("/", $_SERVER['REQUEST_URI']);
 
+$pathCek = $path[1] == APP_FOLDER ? $path[2] : $path[1];
 // $_SESSION['TOKEN'] = "123";
 
-if ($path[1] == $apiPath) {
+if ($pathCek == $apiPath) {
     error_reporting(0);
     if (isset($_SESSION['token'])) {
-        if ($_SESSION['token'] != $_REQUEST['_token']) {
+        if (base64Enc($_SESSION['token'], 3) != $_REQUEST['_token']) {
             echo json_encode([
                 'status' => 'fail',
                 'smg' => 'invalid token'
