@@ -2,7 +2,16 @@ const BASE_URL = $('meta[name="baseUrl"]').attr("content"),
 	ADMIN_PATH = BASE_URL + $('meta[name="adminPath"]').attr("content"),
 	API_PATH = BASE_URL + $('meta[name="apiPath"]').attr("content") + "/",
 	TOKEN = $('meta[name="_token"]').attr("content");
-var table, table1;
+var table, table1, CURRENT_PATH;
+
+moment.locale('id');
+
+function initTooltip() {
+	$("[title]:not([class='cke_wysiwyg_frame'])").attr(`data-html`, 'true')
+	$("[title]:not([class='cke_wysiwyg_frame'])").attr(`data-toggle`, 'tooltip')
+	$("a[id='itemFloat']").attr(`data-placement`, 'left')
+	$("[title]:not([class='cke_wysiwyg_frame'])").tooltip()
+}
 
 function disableButton() {
 	$(":submit").append(' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'), $(":submit").attr("disabled", !0)
@@ -52,7 +61,10 @@ function toastError(msg, title = "Error") {
 	})
 }
 
-function msgSweetError(pesan, options = {title:"Error", timer:3000}) {
+function msgSweetError(pesan, options = {
+	title: "Error",
+	timer: 3000
+}) {
 	return Swal.fire({
 		icon: "error",
 		html: pesan,
@@ -62,7 +74,10 @@ function msgSweetError(pesan, options = {title:"Error", timer:3000}) {
 	})
 }
 
-function msgSweetSuccess(pesan, options = {title:"Sukses", timer:3000}) {
+function msgSweetSuccess(pesan, options = {
+	title: "Sukses",
+	timer: 3000
+}) {
 	return Swal.fire({
 		icon: "success",
 		html: pesan,
@@ -72,7 +87,10 @@ function msgSweetSuccess(pesan, options = {title:"Sukses", timer:3000}) {
 	})
 }
 
-function msgSweetWarning(pesan, options = {title:"Peringatan", timer:3000}) {
+function msgSweetWarning(pesan, options = {
+	title: "Peringatan",
+	timer: 3000
+}) {
 	return Swal.fire({
 		icon: "warning",
 		html: pesan,
@@ -82,7 +100,10 @@ function msgSweetWarning(pesan, options = {title:"Peringatan", timer:3000}) {
 	})
 }
 
-function msgSweetInfo(pesan, options = {title:"Informasi", timer:3000}) {
+function msgSweetInfo(pesan, options = {
+	title: "Informasi",
+	timer: 3000
+}) {
 	return Swal.fire({
 		icon: "info",
 		html: pesan,
@@ -92,7 +113,11 @@ function msgSweetInfo(pesan, options = {title:"Informasi", timer:3000}) {
 	})
 }
 
-function confirmSweet(pesan, options = {title:"Konfirmasi", confirmBtn:"Ya", cancelBtn:"Tidak"}) {
+function confirmSweet(pesan, options = {
+	title: "Konfirmasi",
+	confirmBtn: "Ya",
+	cancelBtn: "Tidak"
+}) {
 	return Swal.fire({
 		icon: "warning",
 		title: options.title,
@@ -115,12 +140,12 @@ function redirect(url) {
 
 function validate(params) {
 	Object.values(params).forEach(item => {
-		1 == item.valid ? ($("[name=" + item.input + "]").addClass("is-valid1"), $("[name=" + item.input + "]").removeClass("is-invalid"), $("#validate_" + item.input).addClass("valid-feedback"), $("#validate_" + item.input).html("")) : ($("[name=" + item.input + "]").addClass("is-invalid"), $("[name=" + item.input + "]").removeClass("is-valid"), $("#validate_" + item.input).addClass("invalid-feedback"), $("#validate_" + item.input).html(item.message))
+		1 == item.valid ? ($("[name=" + item.input + "]").addClass("is-valid1"), $("[name=" + item.input + "]").removeClass("is-invalid"), $("[id='validate_" + item.input + "']").addClass("valid-feedback"), $("#validate_" + item.input).html("")) : ($("[name=" + item.input + "]").addClass("is-invalid"), $("[name=" + item.input + "]").removeClass("is-valid"), $("[id='validate_" + item.input + "']").addClass("invalid-feedback"), $("[id='validate_" + item.input + "']").html(item.message))
 	}), selectInput(params)
 }
 
 function selectInput(params) {
-	Object.values(params).some(item => ($("[name=" + item.input + "]").select(), 0 == item.valid))
+	Object.values(params).some(item => ($("[name=" + item.input + "].is-invalid").select(), 0 == item.valid))
 }
 
 function clearInput(params) {
@@ -205,6 +230,7 @@ function addFloatingButton(options = {}) {
 			</div>
 		`)
 	}
+	initTooltip()
 }
 
 function clearFormInput(formBody) {
@@ -228,15 +254,17 @@ function addFormInput(formBody, inputForm = {}) {
 			}
 			if (options.api) {
 				let api = options.api
-				let postData = {_token : TOKEN}
+				let postData = {
+					_token: TOKEN
+				}
 				if (api.where) postData.where = api.where
 				if (api.order) postData.order = api.order
 				$.ajax({
 					url: api.url,
 					data: postData,
-					type: api.type,
+					type: "POST",
 					dataType: "JSON",
-					success: function(result) {
+					success: function (result) {
 						if (result.status == 'fail') return toastError(result.message)
 						if ("selectMultiple" != options.type) selectOptionList += `<option selected disabled> --- Pilih --- </option>`
 						Object.keys(result.data).forEach(index => {
@@ -251,19 +279,32 @@ function addFormInput(formBody, inputForm = {}) {
 							options.dataType ? $(`.select2-${options.name}`).html(selectOptionList) : $(`[name="${options.name}"]`).html(selectOptionList)
 						})
 					},
-					error: function(err) {
+					error: function (err) {
 						errorCode(err)
 					}
 				})
 			}
 			const inputType = {
-				"hidden"   : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="hidden" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} readonly>`,
-				"text"     : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="text" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
-				"password" : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="password" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
-				"number"   : `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="number" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``}>`,
-				"select"   : `<select class="${options.class ?? "form-control"}" ${options.attr ?? ""} name="${options.name}" ${options.id ? `id="${options.id}"` : ''}>${selectOptionList}</select>`,
-				"select2"  : `<select class="${options.class ?? "form-control select2-"}${options.name}" ${options.attr ?? ""} name="${options.name}" ${options.id ? `id="${options.id}"` : ''}>${selectOptionList}</select><script>$('.select2-${options.name}').select2({theme: 'bootstrap4'})</script>`,
-				"selectMultiple"  : `<select class="${options.class ?? "form-control select2-"}${options.name}" ${options.attr ?? ""} multiple="multiple" ${options.dataType ? '' : `name="${options.name}"`} ${options.id ? `id="${options.id}"` : ''}>${selectOptionList}</select><script>$('.select2-${options.name}').select2({theme: 'bootstrap4'}), $('.select2-${options.name}').on('change',function() {$('#select2-${options.name}-result').val(JSON.stringify($(this).val()).replace('[]',''))})</script>`,
+				"hidden": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="hidden" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} readonly>`,
+				"text": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="text" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} ${options.required ?? ''}>`,
+				"password": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="password" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} ${options.required ?? ''}>`,
+				"number": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="number" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} ${options.required ?? ''}>`,
+				"file": `<div class="custom-file"><input type="file" class="custom-file-input ${options.class}" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}><label class="custom-file-label">Pilih File</label></div>`,
+				"select": `<select class="${options.class ?? "form-control"}" ${options.attr ?? ""} name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}>${selectOptionList}</select>`,
+				"select2": `<select class="${options.class ?? "form-control select2-"}${options.name}" ${options.attr ?? ""} name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}>${selectOptionList}</select><script>$('.select2-${options.name}').select2({theme: 'bootstrap4'})</script>`,
+				"selectMultiple": `<select class="${options.class ?? "form-control select2-"}${options.name}" ${options.attr ?? ""} multiple="multiple" ${options.dataType ? '' : `name="${options.name}"`} ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}>${selectOptionList}</select><script>$('.select2-${options.name}').select2({theme: 'bootstrap4'}), $('.select2-${options.name}').on('change',function() {$('#select2-${options.name}-result').val(JSON.stringify($(this).val()).replace('[]',''))})</script>`,
+				"editor": `<textarea id="${options.name}-editor" class='textEditor' placeholder="Isi konten" style="width: 100%; height: 200px;"></textarea>
+					<input type="hidden" id="${options.name}-result" name="${options.name}">
+					<script>
+						CKEDITOR.replace('${options.name}-editor', {
+							height: 400,
+							filebrowserUploadUrl: '${ADMIN_PATH}/uploads',
+						})
+						CKEDITOR.instances['${options.name}-editor'].on('change', function() { 
+							$("#${options.name}-result").val(CKEDITOR.instances['${options.name}-editor'].getData())
+						});
+					</script>
+				`,
 			}
 			html += `
 				<div class="form-group ${options.type == "hidden" ? 'd-none' : ''}">
@@ -277,6 +318,11 @@ function addFormInput(formBody, inputForm = {}) {
 	})
 	if (cek != 0) {
 		$(formBody).html(html)
+		initTooltip()
+		$(`.custom-file-input`).on("change", function () {
+			let fileName = $(this).val().split('\\').pop();
+			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		});
 	}
 }
 
@@ -296,16 +342,16 @@ $(document).delegate('a[id="itemFloat"]', 'click', function (e) {
 	confirmSweet(message[action]).then(result => {
 		if (isConfirmed(result)) {
 			let formData = {
-				_token : TOKEN,
-				dataId : dataId
-			} 
+				_token: TOKEN,
+				dataId: dataId
+			}
 			if (action == "active" || action == "deactive") formData.action = action, action = 'set'
 			$.ajax({
 				url: `${url}${action}-multiple`,
 				type: "POST",
 				dataType: "JSON",
 				data: formData,
-				beforeSend: function () {
+				beforeSend: function () { 
 					disableButton()
 				},
 				complete: function () {
@@ -384,3 +430,14 @@ $(document).delegate("#btnLogout", "click", (function () {
 		})
 	})
 }));
+
+// $(document).delegate('a.menu-item', 'click', function(e) {
+// 	e.preventDefault()
+// 	url = $(this).attr("href")
+// 	// alert("hello " + url)
+// 	// $("#fullContent").load(`${url} #fullContent`, {_token : TOKEN})
+//     $.get(url, function(data) {
+//         $("#contentId").html($(data).find('#contentId'))
+//         $("#jsSection").html($(data).find('#jsSection'))
+//     });
+// })
