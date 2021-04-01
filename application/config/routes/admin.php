@@ -72,8 +72,12 @@ $path = "news";
 $route = array_merge($route, [
     "$adminPath/$path"                   => "admin/$controller",
     "$adminPath/$path/store"             => "admin/$controller/store",
+    "$adminPath/$path/check-title"       => "admin/$controller/checkTitle",
     "$adminPath/$path/delete"            => "admin/$controller/delete",
     "$adminPath/$path/update"            => "admin/$controller/update",
-    "$adminPath/$path/set"               => "admin/$controller/set",
+    "$adminPath/$path/set/(:any)"        => "admin/$controller/set_/$1",
+    "$adminPath/$path/delete-multiple"   => "admin/$controller/deleteMultiple",
+    "$adminPath/$path/reset-multiple"    => "admin/$controller/resetMultiple",
+    "$adminPath/$path/set-multiple"      => "admin/$controller/setMultiple",
 ]);
 
