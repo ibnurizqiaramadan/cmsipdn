@@ -1,4 +1,11 @@
-@extends('admin/layouts/app', ['title' => 'Pengguna', 'menu' => 'users'])
+@extends('admin/layouts/app', ['title' => 'Pengguna',
+	'menu' => 'users',
+	'roti' => [
+		'Home:blank' => base_url(),
+		'Dashboard' => base_url(ADMIN_PATH . '/dashboard'),
+		'Pengguna:active' => '',
+	]
+])
 
 @section('content')
 <div class="container-fluid pb-3">
@@ -6,7 +13,7 @@
 		<div class="card-body">
 			<div class="table-responsive">
 				<div class="float-right ml-3">
-					<button class="btn btn-sm btn-primary" id="btnAdd">
+					<button class="btn btn-sm btn-primary" id="btnAdd" title="Pengguna Baru">
 						<i class="fas fa-user-plus mr-1"> </i>Baru
 					</button>
 				</div>
@@ -62,7 +69,6 @@
 		</div>
 	</div>
 </div>
-
 @endsection
 
 @section('js')

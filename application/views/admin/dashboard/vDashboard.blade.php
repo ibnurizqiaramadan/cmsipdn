@@ -1,6 +1,10 @@
 @extends('admin/layouts/app', [
     'title' => 'Dashboard', 
-    'menu' => 'dashboard'
+    'menu' => 'dashboard',
+    'roti' => [
+		'Home:blank' => base_url(), 
+		'Dashboard:active' => '', 
+	]
 ])
 
 @section('content')

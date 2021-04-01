@@ -1,16 +1,26 @@
 @extends('admin/layouts/app', [
-    'title' => 'Berita', 
-    'menu' => 'post',
-	'subMenu' => 'news'
+	'title' => 'Berita',
+	'menu' => 'post',
+	'subMenu' => 'news', 
+	'roti' => [
+		'Home:blank' => base_url(), 
+		'Dashboard' => base_url(ADMIN_PATH . '/dashboard'), 
+		'Post' => '', 
+		'Berita:active' => '', 
+	]
 ])
 
 @section('content')
+{{-- {{ DATE_NOW }} --}}
 <div class="container-fluid pb-3">
 	<div class="card shadow mb-0">
 		<div class="card-body">
 			<div class="table-responsive">
+				<div class="float-left mr-3">
+					<button class="btn m-0 p-0" title="Segarkan"><i class="fas fa-sync bg ml-2"></i></button>
+				</div>
 				<div class="float-right ml-3">
-					<button class="btn btn-sm btn-primary" id="btnAdd">
+					<button class="btn btn-sm btn-primary" id="btnAdd" title="Berita Baru">
 						<i class="fas fa-user-plus mr-1"> </i>Baru
 					</button>
 				</div>
@@ -19,11 +29,13 @@
 						<tr>
 							<th></th>
 							<th>Judul</th>
-							<th>Author</th>
+							<th>Pembuat</th>
 							<th>Tags</th>
-							<th>Active</th>
-							<th>Last Update</th>
+							<th>Terakhir diubah</th>
+							<th>crated at</th>
+							<th>Aktif</th>
 							<th>Aksi</th>
+							<th>status</th>
 						</tr>
 					</thead>
 
@@ -33,11 +45,13 @@
 						<tr>
 							<th></th>
 							<th>Judul</th>
-							<th>Author</th>
+							<th>Pembuat</th>
 							<th>Tags</th>
-							<th>Active</th>
-							<th>Last Update</th>
+							<th>Terakhir diubah</th>
+							<th>crated at</th>
+							<th>Aktif</th>
 							<th>Aksi</th>
+							<th>status</th>
 						</tr>
 					</tfoot>
 				</table>
@@ -47,8 +61,8 @@
 	<div id="floatButton"></div>
 </div>
 
-<div class="modal fade" id="modalForm" data-backdrop="static" data-keyboard="false" tabindex="-1">
-	<div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="modalForm" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-xl modal-dialog-centered" >
 		<div class="modal-content">
 			<form id="formInput">
 				<div class="modal-header">
@@ -58,7 +72,7 @@
 					</button>
 				</div>
 				<div class="modal-body" id="formBody">
-
+					
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -72,5 +86,6 @@
 @endsection
 
 @section('js')
+<script src="{{ base_url('/assets/modules/ckeditor/ckeditor.js') }}" defer></script>
 <script src="{{ base_url('assets/js/page/news.js') }}" defer></script>
 @endsection

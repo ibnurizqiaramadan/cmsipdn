@@ -1,6 +1,24 @@
 @include('admin.layouts.head')
 
-@include('admin.layouts.js')
+<div id="jsSection">
+	@include('admin.layouts.js')
+</div>
+
+<div class="loadingNa">
+	<div class="loadingGan">
+		<div class="ldio-xvietdzji3j">
+			<div></div>
+			<div></div>
+			<div>
+				<div></div>
+			</div>
+			<div>
+				<div></div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <body class="hold-transition sidebar-mini layout-fixed">
 	<div class="wrapper">
 		<!-- Navbar -->
@@ -11,18 +29,6 @@
 					<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
 				</li>
 			</ul>
-
-			<!-- SEARCH FORM -->
-			{{-- <form class="form-inline ml-3">
-      <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append">
-          <button class="btn btn-navbar" type="submit">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </div>
-    </form> --}}
 
 			<!-- Right navbar links -->
 			<ul class="navbar-nav ml-auto">
@@ -64,11 +70,6 @@
 						</a>
 					</div>
 				</li>
-				{{-- <li class="nav-item">
-        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-          <i class="fas fa-expand-arrows-alt"></i>
-        </a>
-      </li> --}}
 			</ul>
 		</nav>
 		<!-- /.navbar -->
@@ -94,8 +95,9 @@
 						<a href="#" class="d-block">{{ $_SESSION['name'] }}</a>
 					</div>
 				</div>
-
-				@include('admin/layouts/nav')
+				<div id="navSection">
+					@include('admin/layouts/nav')
+				</div>
 
 			</div>
 			<!-- /.sidebar -->
@@ -108,13 +110,16 @@
 				<div class="container-fluid">
 					<div class="row mb-2">
 						<div class="col-sm-6">
-							<h1 class="m-0">{{ $title ?? 'Administrator' }}</h1>
+							{{-- <h1 class="m-0">{{ $title ?? 'Administrator' }}</h1> --}}
+							<ol class="breadcrumb" id="rotiId">
+								@foreach ($roti as $menu => $link)
+								@php $param = explode(":", $menu);$target = $param[1] == 'blank' ? '_blank' : '';@endphp
+								<li class="breadcrumb-item {{ $param[1] }}"> {!! $link != '' ? "<a class='roti' href='$link'
+										target='$target'>" . $param[0] . "</a>" : $param[0] !!}</li>
+								@endforeach
+							</ol>
 						</div><!-- /.col -->
 						<div class="col-sm-6">
-							<ol class="breadcrumb float-sm-right">
-								<li class="breadcrumb-item"><a href="#">Home</a></li>
-								<li class="breadcrumb-item active">Dashboard v1</li>
-							</ol>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
 				</div><!-- /.container-fluid -->
@@ -122,10 +127,13 @@
 			<!-- /.content-header -->
 
 			<!-- Main content -->
-			<section class="content">
+			<section class="content" id="contentId">
 				@yield('content')
 			</section>
 			<!-- /.content -->
+		</div>
+		<div class="cusctomJs">
+
 		</div>
 		<!-- /.content-wrapper -->
 		<footer class="main-footer">
