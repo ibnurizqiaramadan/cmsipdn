@@ -32,6 +32,7 @@ class C_login extends CI_Controller
                 if ($userData->active != 1) throw new Exception("Akun Anda tidak aktif");
                 $token = $this->req->acak(time() . $userData->token . $userData->username);
                 $session = [
+                    'userId' => $userData->id,
                     'username' => $userData->username,
                     'name' => $userData->name,
                     'level' => $userData->role, // 0 = User; 1 = Admin
