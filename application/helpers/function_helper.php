@@ -36,6 +36,39 @@ function Create($table, $data, $json = false)
     }
 }
 
+function CreateMultiple($table, $data, $json = false)
+{
+    try {
+
+        $CI = &get_instance();
+        $CI->db->insert_batch($table, $data);
+        $return_ = $CI->req->cekPerubahan();
+        // echo "$return_ hello";
+        // exit();
+        if ($return_ == false) throw new Exception("Gagal memasukan data");
+        $message = [
+            'status' => 'ok',
+            'message' => 'Berhasil memasukan data'
+        ];
+    } catch (\Throwable $th) {
+        $message = [
+            'status' => 'fail',
+            'message' => $th->getMessage()
+        ];
+    } catch (\Exception $ex) {
+        $message = [
+            'status' => 'fail',
+            'message' => $ex->getMessage()
+        ];
+    } finally {
+        if ($json == true) {
+            echo json_encode($message);
+        } else {
+            return $return_;
+        }
+    }
+}
+
 function Update($table, $data, $where, $json = false)
 {
     try {
@@ -397,6 +430,11 @@ function getAssetsFiles($path, $js = false)
 function getUploadsFiles($path)
 {
     return UPLOADS_PATH . $path;
+}
+
+function isPost()
+{
+    return $_SERVER['REQUEST_METHOD'] == 'POST' ? true : false;
 }
 
 function iLove($someone)
