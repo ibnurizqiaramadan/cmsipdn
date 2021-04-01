@@ -6,6 +6,10 @@ var table, table1, CURRENT_PATH;
 
 moment.locale('id');
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function initTooltip() {
 	$("[title]:not([class='cke_wysiwyg_frame'])").attr(`data-html`, 'true')
 	$("[title]:not([class='cke_wysiwyg_frame'])").attr(`data-toggle`, 'tooltip')
@@ -154,9 +158,18 @@ function clearInput(params) {
 	})
 }
 
-function FillForm(data) {
+function fillForm(data) {
 	Object.keys(data).forEach(item => {
-		$("[name='" + item + "']").val(data[item]), $("[name='" + item + "']").val(data[item]).change(), $("[name='" + item + "']").hasClass("summernote") && $("[name='" + item + "']").summernote("code", data[item])
+		$("[name='" + item + "']:not([type=file])").val(data[item])
+		$("[name='" + item + "']:not([type=file])").val(data[item]).change()
+		$("[name='" + item + "']").hasClass("summernote") && $("[name='" + item + "']").summernote("code", data[item])
+		$("[id='" + item + "-editor']").hasClass("textEditor") && CKEDITOR.instances[item + '-editor'].setData(data[item])
+		if ($(".select2-" + item).attr('multiple')) {
+			JSON.parse(data[item])?.forEach(value => {
+				$("option[value=" + value + "]").prop("selected", true)
+			})
+			$(".select2-" + item).change()
+		}
 	})
 }
 
@@ -230,7 +243,7 @@ function addFloatingButton(options = {}) {
 			</div>
 		`)
 	}
-	initTooltip()
+	// initTooltip()
 }
 
 function clearFormInput(formBody) {
@@ -242,7 +255,7 @@ function addFormInput(formBody, inputForm = {}) {
 	let cek = 0
 	Object.keys(inputForm).forEach(index => {
 		const options = inputForm[index]
-		if ($(`[name='${options.name}']`).length == 0) {
+		if ($(`[name='${options.name??''}']`).length == 0) {
 			cek += 1
 			let selectOptionList = ''
 			if (options.data) {
@@ -276,7 +289,7 @@ function addFormInput(formBody, inputForm = {}) {
 							})
 							value = row[api.option.value]
 							selectOptionList += `<option value='${value}'>${caption}</option>`
-							options.dataType ? $(`.select2-${options.name}`).html(selectOptionList) : $(`[name="${options.name}"]`).html(selectOptionList)
+							options.dataType ? $(`.select2-${options.name??''}`).html(selectOptionList) : $(`[name="${options.name??''}"]`).html(selectOptionList)
 						})
 					},
 					error: function (err) {
@@ -285,23 +298,23 @@ function addFormInput(formBody, inputForm = {}) {
 				})
 			}
 			const inputType = {
-				"hidden": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="hidden" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} readonly>`,
-				"text": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="text" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} ${options.required ?? ''}>`,
-				"password": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="password" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} ${options.required ?? ''}>`,
-				"number": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="number" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} ${options.required ?? ''}>`,
-				"file": `<div class="custom-file"><input type="file" class="custom-file-input ${options.class}" name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}><label class="custom-file-label">Pilih File</label></div>`,
-				"select": `<select class="${options.class ?? "form-control"}" ${options.attr ?? ""} name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}>${selectOptionList}</select>`,
-				"select2": `<select class="${options.class ?? "form-control select2-"}${options.name}" ${options.attr ?? ""} name="${options.name}" ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}>${selectOptionList}</select><script>$('.select2-${options.name}').select2({theme: 'bootstrap4'})</script>`,
-				"selectMultiple": `<select class="${options.class ?? "form-control select2-"}${options.name}" ${options.attr ?? ""} multiple="multiple" ${options.dataType ? '' : `name="${options.name}"`} ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}>${selectOptionList}</select><script>$('.select2-${options.name}').select2({theme: 'bootstrap4'}), $('.select2-${options.name}').on('change',function() {$('#select2-${options.name}-result').val(JSON.stringify($(this).val()).replace('[]',''))})</script>`,
-				"editor": `<textarea id="${options.name}-editor" class='textEditor' placeholder="Isi konten" style="width: 100%; height: 200px;"></textarea>
-					<input type="hidden" id="${options.name}-result" name="${options.name}">
+				"hidden": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="hidden" name="${options.name??''}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} readonly>`,
+				"text": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="text" name="${options.name??''}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} ${options.required ?? ''}>`,
+				"password": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="password" name="${options.name??''}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} ${options.required ?? ''}>`,
+				"number": `<input class="${options.class ?? "form-control"}" ${options.attr ?? ""} type="number" name="${options.name??''}" ${options.id ? `id="${options.id}"` : ''} ${options.value ? `value="${options.value}"` : ``} ${options.required ?? ''}>`,
+				"file": `<div class="custom-file"><input type="file" class="custom-file-input ${options.class}" name="${options.name??''}" ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}><label class="custom-file-label">Pilih File</label></div>`,
+				"select": `<select class="${options.class ?? "form-control"}" ${options.attr ?? ""} name="${options.name??''}" ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}>${selectOptionList}</select>`,
+				"select2": `<select class="${options.class ?? "form-control select2-"}${options.name??''}" ${options.attr ?? ""} name="${options.name??''}" ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}>${selectOptionList}</select><script>$('.select2-${options.name??''}').select2({theme: 'bootstrap4'})</script>`,
+				"selectMultiple": `<select class="${options.class ?? "form-control select2-"}${options.name??''}" ${options.attr ?? ""} multiple="multiple" ${options.dataType ? '' : `name="${options.name??''}"`} ${options.id ? `id="${options.id}"` : ''} ${options.required ?? ''}>${selectOptionList}</select><script>$('.select2-${options.name??''}').select2({theme: 'bootstrap4'}), $('.select2-${options.name??''}').on('change',function() {$('#select2-${options.name??''}-result').val(JSON.stringify($(this).val()).replace('[]',''))})</script>`,
+				"editor": `<textarea id="${options.name??''}-editor" class='textEditor' placeholder="Isi konten" style="width: 100%; height: 200px;"></textarea>
+					<input type="hidden" id="${options.name??''}-result" name="${options.name??''}">
 					<script>
-						CKEDITOR.replace('${options.name}-editor', {
+						CKEDITOR.replace('${options.name??''}-editor', {
 							height: 400,
 							filebrowserUploadUrl: '${ADMIN_PATH}/uploads',
 						})
-						CKEDITOR.instances['${options.name}-editor'].on('change', function() { 
-							$("#${options.name}-result").val(CKEDITOR.instances['${options.name}-editor'].getData())
+						CKEDITOR.instances['${options.name??''}-editor'].on('change', function() { 
+							$("#${options.name??''}-result").val(CKEDITOR.instances['${options.name??''}-editor'].getData())
 						});
 					</script>
 				`,
@@ -310,15 +323,15 @@ function addFormInput(formBody, inputForm = {}) {
 				<div class="form-group ${options.type == "hidden" ? 'd-none' : ''}">
 					<label>${options.label ?? "Input"}</label>
 					${inputType[options.type]}
-					${options.dataType?.toLowerCase() == "json" ? `<input type="hidden" id='select2-${options.name}-result' name='${options.name}'></input>`: ''}
-					<div id='validate_${options.name}'></div>
+					${options.dataType?.toLowerCase() == "json" ? `<input type="hidden" id='select2-${options.name??''}-result' name='${options.name??''}'></input>`: ''}
+					<div id='validate_${options.name??''}'></div>
 				</div>
 			`
 		}
 	})
 	if (cek != 0) {
 		$(formBody).html(html)
-		initTooltip()
+		// initTooltip()
 		$(`.custom-file-input`).on("change", function () {
 			let fileName = $(this).val().split('\\').pop();
 			$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
@@ -431,13 +444,44 @@ $(document).delegate("#btnLogout", "click", (function () {
 	})
 }));
 
-// $(document).delegate('a.menu-item', 'click', function(e) {
-// 	e.preventDefault()
-// 	url = $(this).attr("href")
-// 	// alert("hello " + url)
-// 	// $("#fullContent").load(`${url} #fullContent`, {_token : TOKEN})
-//     $.get(url, function(data) {
-//         $("#contentId").html($(data).find('#contentId'))
-//         $("#jsSection").html($(data).find('#jsSection'))
-//     });
-// })
+function loadPage(e) {
+	$('.loadingNa').show()
+	url = $(e).attr("href")
+	$(e).attr('target') == '_blank' ? (window.open(url), $('.loadingNa').hide()) : (window.history.pushState("", "", url), $('a.menu-item').removeClass('active'), $(e).addClass('active'))
+	if ($(e).attr('target') == '_blank') return
+    $.get(url, function(data) {
+		const customJs = $(data).find("#customJsNa").html().split("</script>")
+		$("#contentId").html($(data).find('#contentId'))
+		$(".webTitle").html($(data).filter('title').text())
+		$("#rotiId").html($(data).find('#rotiId'))
+        $("#jsSection").html($(data).find('#jsSection'))
+		let jsNa = ''
+		customJs.forEach(scriptJs => {
+			if (scriptJs.trim() == '') return
+			let js = scriptJs.replace(/[<>"=]+/g, "")
+			js = js.replace(/defer+/g, '')
+			js = js.replace(/src+/g, '')
+			js = js.replace(/script+/g, '')
+			jsNa += `<script src=${js.trim()}></script>`
+		})
+		$('.cusctomJs').html(jsNa)
+    }).fail(function(err) {
+		$("#contentId").html(`<div class="container">${err.statusText}</div>`)
+		$('.loadingNa').hide()
+		errorCode(err)
+	}).done(function() {
+		$('.loadingNa').hide()
+	})
+}
+
+$(document).delegate('a.menu-item', 'click', function(e) {
+	e.preventDefault()
+	loadPage(this)
+})
+
+$(document).delegate('.roti', 'click', function(e) {
+	e.preventDefault()
+	loadPage(this)
+	const url = $(this).attr('href')
+	$(`a.menu-item[href='${url}']`).addClass('active')
+})
