@@ -70,13 +70,15 @@ class C_users extends CI_Controller
     {
         try {
             $validate = Validate([
-                'username' => 'required|min:6|max:20|username',
+                'username' => 'required|min:5|max:20|username',
                 'name' => 'required|min:6|name',
                 'role' => 'required|number'
             ], ['password' => $this->req->acak('123456')]);
             
+            $user = $this->db->select('username')->from($this->table)->where('username', Input_('username'))->get()->row();
+            if ($user) $validate = ValidateAdd($validate, 'username', 'Username ada yang sama');
             if (!$validate['success']) throw new Exception("Error Processing Request");
-            if (!Create($this->table, Guard($validate['data'], ['id', 'token']))) throw new Exception("Gagal memasukan data !");
+            if (!Create($this->table, $validate['data'])) throw new Exception("Gagal memasukan data !");
             
             $message = [
                 'status' => 'ok',
