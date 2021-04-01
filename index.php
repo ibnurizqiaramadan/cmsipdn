@@ -66,7 +66,7 @@
 	define('APP_FOLDER', 'ipdncms');
 	define('ASSETS_PATH', BASE_URL . 'assets/');
 	define('UPLOADS_PATH', BASE_URL . 'uploads/');
-	define('DATE_NOW', date('Y-m-d h:i:s', time()));
+	define('DATE_NOW', date('Y-m-d H:i:s', time()));
 	function base64Enc($text, $times = 1)
 	{
 		if ($times == 1) return base64_encode($text);
