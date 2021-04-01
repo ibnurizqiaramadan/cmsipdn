@@ -1,9 +1,38 @@
-let CURRENT_PATH = ADMIN_PATH + "/news/";
+CURRENT_PATH = ADMIN_PATH + "/news/";
 
 function refreshTable() {
 	table.ajax.reload(null, !1)
 }
-$(document).ready((function () {
+
+function setStatus(status, id) {
+	confirmSweet("Anda yakin ingin merubah status ?").then(result => {
+		if (isConfirmed(result)) {
+			$.ajax({
+				url: CURRENT_PATH + "set/" + id,
+				data: {
+					_token: TOKEN,
+					status: status
+				},
+				type: "POST",
+				dataType: "JSON",
+				beforeSend: function () {
+					disableButton()
+				},
+				complete: function () {
+					enableButton()
+				},
+				success: function (result) {
+					"ok" == result.status ? (refreshTable(), toastSuccess(result.message)) : (enableButton(), toastError(result.message, "Gagal"))
+				},
+				error: function (error) {
+					errorCode(error)
+				}
+			})
+		}
+	})
+}
+
+function initTable() {
 	table = $("#listNews").DataTable({
 		processing: !0,
 		serverSide: !0,
@@ -35,53 +64,86 @@ $(document).ready((function () {
 		}, {
 			data: "slug"
 		}, {
-            data: 'cover'
-        }, {
-            data: "author"
-        }, {
-            data: "category"
-        }, {
-            data: "updated_at"
-        }],
+			data: 'cover'
+		}, {
+			data: "author"
+		}, {
+			data: "category"
+		}, {
+			data: "created_at"
+		}, {
+			data: "updated_at"
+		}, {
+			data: "status"
+		}],
 		columnDefs: [{
 			targets: [0],
 			orderable: !1,
-			sClass: "text-center",
+			sClass: "text-center align-middle",
 			render: function (data, type, row) {
-				return "<input type='checkbox' id='checkItem-" + row.id + "' value='" + row.id + "'>"
+				return "<input type='checkbox' style='width:13px;' id='checkItem-" + row.id + "' value='" + row.id + "'>"
 			}
 		}, {
-			targets: [3],
+			targets: [5, 8, 3],
 			orderable: !1,
-			sClass: "text-center",
-			render: function (data, type, row) {
-				let tags = JSON.parse(row.category)
-                // console.log(tags)
-				let tag_ = ''
-				tags.forEach(tag => {
-					const tagName = tag.split(":")[1]
-					tag_ += `<span class="bg-info pl-1 pr-1">${tagName}</span> `
-				})
-                // return tags[0]
-                return tag_
-			}
+			visible: !1,
 		}, {
-			targets: [5],
-			orderable: !1,
-			sClass: "text-center",
-			render: function (data, type, row) {
-				return row.updated_at
-			}
-		}, {
-			sClass: "text-center",
-			targets: [6],
+			targets: [1],
 			orderable: !0,
+			render: function (data, type, row) {
+				let html = row.title.length > 50 ? row.title.substr(0, 50) + '...' : row.title
+				let tags = JSON.parse(row.category) ?? []
+				let tag_ = ''
+				let title = ''
+				for (let index = 0; index < tags.length; index++) {
+					const tagName = tags[index].split(":")[1];
+					index < 1 ? tag_ += `<span class="text-xs bg-info p-1 pl-2 pr-2 rounded">${tagName}</span> ` : title += `${tagName}\n`
+				}
+				tag_ += tags.length > 1 ? `<span class="text-xs p-1 pl-2 bg-info rounded-circle" title="${title}"> ${tags.length - 1}+ </span>` : ''
+				return `
+					<div class="h6">
+						${html}
+					</div>
+					<div>
+						<span class="text-sm mr-2 text-muted">dibuat : ${moment(row.created_at).format("dddd, DD MMMM YYYY")}</span>
+						<span class="float-right">${tag_}</span>
+					</div>
+				`
+			}
+		}, {
+			targets: [2],
+			orderable: !0,
+			sClass: "text-center align-middle",
+			render: function (data, type, row) {
+				return `<span class="text-justify">${row.author}</span>`
+			}
+		}, {
+			targets: [6],
+			sClass: "text-center align-middle",
+			render: function (data, type, row) {
+				return 1 == row.status ? "<button class='btn btn-success btn-sm' id='on' data-id=" + row.id + " title='Berita Aktif'><i class='fas fa-toggle-on'></i> On</button>" : "<button class='btn btn-danger btn-sm' id='off' data-id=" + row.id + " title='Berita Tidak Aktif'><i class='fas fa-toggle-off'></i> Off</button>"
+			}
+		}, {
+			targets: [4],
+			orderable: !0,
+			sClass: "text-center align-middle",
+			render: function (data, type, row) {
+				return row.created_at != row.updated_at ? moment(row.updated_at).startOf().fromNow() : '-'
+			}
+		}, {
+			sClass: "text-center align-middle",
+			targets: [7],
+			orderable: !1,
 			render: function (data, type, row) {
 				return "<button class='btn btn-danger btn-sm' id='delete' data-id=" + row.id + " title='Hapus Data'><i class='fas fa-trash-alt'></i></button> \n <button class='btn btn-warning btn-sm' id='edit' data-id=" + row.id + " title='Edit Data'><i class='fas fa-pencil-alt'></i></button>"
 			}
 		}]
 	})
-})), $("#listUser").delegate("#delete", "click", (function () {
+}
+
+$(document).ready((function () {
+	initTable()
+})), $("#listNews").delegate("#delete", "click", (function () {
 	confirmSweet("Anda yakin ingin menghapus data ?").then((result) => {
 		if (isConfirmed(result)) {
 			let id = $(this).data("id")
@@ -96,8 +158,11 @@ $(document).ready((function () {
 				beforeSend: function () {
 					disableButton()
 				},
+				complete: function () {
+					enableButton()
+				},
 				success: function (result) {
-					"ok" == result.status ? (enableButton(), toastSuccess(result.message), refreshTable()) : toastError(result.message, "Gagal")
+					"ok" == result.status ? (toastSuccess(result.message), refreshTable()) : toastError(result.message, "Gagal")
 				},
 				error: function (error) {
 					errorCode(error)
@@ -105,36 +170,83 @@ $(document).ready((function () {
 			})
 		}
 	})
-})), $("#listUser").delegate("#edit", "click", (function () {
+})), $("#listNews").delegate("#edit", "click", (function () {
 	let id = $(this).data("id");
 	$.ajax({
-		url: API_PATH + "data/category/get/" + id,
+		url: API_PATH + "data/news/get/" + id,
 		type: "post",
-		data: {_token: TOKEN},
+		data: {
+			_token: TOKEN
+		},
 		dataType: "json",
-		beforeSend: function() {
+		beforeSend: function () {
 			disableButton()
 			clearFormInput("#formBody")
 			addFormInput("#formBody", [{
 				type: "hidden",
-				name: "id"
-			}, {
+				name: 'id',
+			},{
+				type: "hidden",
+				id: "titleCheck"
+			},{
 				type: "text",
-				name: "name",
-                label: "Kategori",
+				name: "title",
+				label: "Judul",
+				required: "required",
+			}, {
+				type: "selectMultiple",
+				name: "category",
+				label: "Kategori",
+				required: "required",
+				dataType: "json",
+				api: {
+					url: `${API_PATH}data/options/category`,
+					option: {
+						value: "id",
+						caption: "{name}"
+					}
+				}
+			}, {
+				type: "file",
+				name: "cover",
+				id: "cover",
+				label: "Pilih Cover (Jika ingin merubah)",
+			}, {
+				type: "editor",
+				name: "content",
+				label: "Konten",
+				required: "required",
 			}])
-		}, 
-		complete: function() {
+			$("#formInput").validate({
+				rules: {
+					title: "required",
+					cetegory: "required",
+					content: "required"
+				},
+				messages: {
+					cover: {
+						required: "Cover harus dipilih"
+					},
+					title: {
+						required: "Judul harus diisi"
+					},
+					cetegory: {
+						required: "Kategori harus dipilih"
+					},
+				}
+			})
+		},
+		complete: function () {
 			enableButton()
 		},
-		success: function(result) {
-			"ok" == result.status ? ($("#modalForm").modal('show'),$("#modalTitle").html('Edit Pengguna'),$("#formInput").attr('action', CURRENT_PATH + "update"), FillForm(result.data)) : msgSweetError(result.message)
+		success: async function (result) {
+			"ok" == result.status ? ($("#modalForm").modal('show'), $("#modalTitle").html('Edit Berita'), $("#formInput").attr('action', CURRENT_PATH + "update"), await sleep(500), fillForm(result.data), $("#titleCheck").val(result.data.title)) : msgSweetError(result.message)
 		},
-		error: function(err) {
+		error: function (err) {
 			errorCode(err)
 		}
 	})
-})), $("#listUser").delegate("#reset", "click", (function (e) {
+})), $("#listNews").delegate("#reset", "click", (function (e) {
 	confirmSweet("Anda yakin ingin mereset password ?").then((result) => {
 		if (isConfirmed(result)) {
 			let id = $(this).data("id");
@@ -160,45 +272,111 @@ $(document).ready((function () {
 			})
 		}
 	})
-})), $("#listUser").delegate("#on", "click", (function () {
+})), $("#listNews").delegate("#on", "click", (function () {
 	setStatus("off", $(this).data("id"))
-})), $("#listUser").delegate("#off", "click", (function () {
+})), $("#listNews").delegate("#off", "click", (function () {
 	setStatus("on", $(this).data("id"))
-})), setInterval(() => {
-	refreshTable()
-}, 3e4), $("#btnAdd").on('click', function () {
+})), $("#btnAdd").on('click', function () {
 	clearFormInput("#formBody")
 	addFormInput("#formBody", [{
-        type: "text",
-        name: "name",
-        label: "Kategori",
-    }])
-	$("#modalTitle").html('Tambah Pengguna')
+		type: "text",
+		name: "title",
+		label: "Judul",
+		required: "required",
+	}, {
+		type: "selectMultiple",
+		name: "category",
+		label: "Kategori",
+		required: "required",
+		dataType: "json",
+		api: {
+			url: `${API_PATH}data/options/category`,
+			option: {
+				value: "id",
+				caption: "{name}"
+			}
+		}
+	}, {
+		type: "file",
+		name: "cover",
+		id: "cover",
+		label: "Pilih Cover",
+		required: "required",
+	}, {
+		type: "editor",
+		name: "content",
+		label: "Konten",
+		required: "required",
+	}])
+	$("#formInput").validate({
+		rules: {
+			cover: "required",
+			title: "required",
+			cetegory: "required",
+			content: "required"
+		},
+		messages: {
+			cover: {
+				required: "Cover harus dipilih"
+			},
+			title: {
+				required: "Judul harus diisi"
+			},
+			cetegory: {
+				required: "Kategori harus dipilih"
+			},
+		}
+	})
+	$("#modalTitle").html('Tambah Berita')
 	$("#formInput").attr('action', CURRENT_PATH + "store")
 	$("#modalForm").modal('show')
-}), $("#formInput").submit(function(e) {
+}), $("#formInput").submit(function (e) {
 	e.preventDefault()
+	let messageLength = CKEDITOR.instances['content-editor'].getData().replace(/<[^>]*>/gi, '').length;
+	if (!messageLength) return toastWarning("Lengkapi Form", "Peringatan")
 	let formData = new FormData(this)
 	formData.append("_token", TOKEN)
+	if (!$(this).valid()) return toastWarning("Lengkapi Form", "Peringatan")
 	$.ajax({
 		url: $(this).attr('action'),
 		type: "post",
-		data: formData, 
+		data: formData,
 		processData: !1,
 		contentType: !1,
 		cache: !1,
 		dataType: "JSON",
 		beforeSend: function () {
-			disableButton()	
+			disableButton()
 		},
 		complete: function () {
 			enableButton()
 		},
 		success: function (e) {
-			validate(e.validate.input),e.validate.success&&("ok"==e.status?(toastSuccess(e.message),refreshTable(),1==e.modalClose&&$("#modalForm").modal("hide"),clearInput(e.validate.input)):toastWarning(e.message));
+			validate(e.validate.input), e.validate.success && ("ok" == e.status ? (toastSuccess(e.message), refreshTable(), 1 == e.modalClose && $("#modalForm").modal("hide"), clearInput(e.validate.input)) : toastWarning(e.message));
 		},
-		error: function(err) {
+		error: function (err) {
 			errorCode(err)
 		}
 	})
+}), $(document).delegate(`input[name="title"]`, 'blur', function () {
+	if ($(this).val() != $("#titleCheck").val()) { 
+		$.ajax({
+			url: `${CURRENT_PATH}check-title`,
+			data: {
+				title: $(this).val(),
+				_token: TOKEN
+			},
+			type: "post",
+			dataType: "json",
+			success: function (result) {
+				validate(result.input)
+				// !1 == result.success ? validate(result.input) : validate(result.index)
+			},
+			error: function (err) {
+				errorCode(err)
+			}
+		})
+	} else {
+		$(this).removeClass('is-invalid')
+	}
 });
