@@ -1,4 +1,4 @@
-let CURRENT_PATH = ADMIN_PATH + "/category/";
+CURRENT_PATH = ADMIN_PATH + "/category/";
 
 function refreshTable() {
 	table.ajax.reload(null, !1)
@@ -98,7 +98,7 @@ $(document).ready((function () {
 			enableButton()
 		},
 		success: function(result) {
-			"ok" == result.status ? ($("#modalForm").modal('show'),$("#modalTitle").html('Edit Pengguna'),$("#formInput").attr('action', CURRENT_PATH + "update"), FillForm(result.data)) : msgSweetError(result.message)
+			"ok" == result.status ? ($("#modalForm").modal('show'),$("#modalTitle").html('Edit Pengguna'),$("#formInput").attr('action', CURRENT_PATH + "update"), fillForm(result.data)) : msgSweetError(result.message)
 		},
 		error: function(err) {
 			errorCode(err)
@@ -134,9 +134,7 @@ $(document).ready((function () {
 	setStatus("off", $(this).data("id"))
 })), $("#listUser").delegate("#off", "click", (function () {
 	setStatus("on", $(this).data("id"))
-})), setInterval(() => {
-	refreshTable()
-}, 3e4), $("#btnAdd").on('click', function () {
+})), $("#btnAdd").on('click', function () {
 	clearFormInput("#formBody")
 	addFormInput("#formBody", [{
         type: "text",

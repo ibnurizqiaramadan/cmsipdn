@@ -1,9 +1,9 @@
-let CURRENT_PATH = ADMIN_PATH + "/users/";
+CURRENT_PATH = ADMIN_PATH + "/users/";
 
 function setStatus(status, id) {
 	confirmSweet("Anda yakin ingin merubah status ?").then(result => {
 		if (isConfirmed(result)) {
-			result && $.ajax({
+			$.ajax({
 				url: CURRENT_PATH + "set/" + id,
 				data: {
 					_token: TOKEN,
@@ -32,6 +32,7 @@ function refreshTable() {
 	table.ajax.reload(null, !1)
 }
 $(document).ready((function () {
+
 	table = $("#listUser").DataTable({
 		processing: !0,
 		serverSide: !0,
@@ -79,7 +80,7 @@ $(document).ready((function () {
 			targets: [4],
 			orderable: !0,
 			render: function (data, type, row) {
-				return 1 == data ? "<button class='btn btn-success btn-sm' id='on' data-id=" + row.id + " title='User Aktif'><i class='fas fa-toggle-on'></i> On</button>" : "<button class='btn btn-danger btn-sm' id='off' data-id=" + row.id + " title='User Tidak Aktif'><i class='fas fa-toggle-off'></i> Off</button>"
+				return 1 == data ? "<button class='btn btn-success btn-sm' id='on' data-id=" + row.id + " data-toggle='tooltip' title='User Aktif'><i class='fas fa-toggle-on'></i> On</button>" : "<button class='btn btn-danger btn-sm' id='off' data-id=" + row.id + " data-toggle='tooltip' title='User Tidak Aktif'><i class='fas fa-toggle-off'></i> Off</button>"
 			}
 		}, {
 			sClass: "text-center",
@@ -93,7 +94,7 @@ $(document).ready((function () {
 			targets: [5],
 			orderable: !0,
 			render: function (data, type, row) {
-				return "<button class='btn btn-danger btn-sm' id='delete' data-id=" + row.id + " title='Hapus Data'><i class='fas fa-trash-alt'></i></button> \n <button class='btn btn-warning btn-sm' id='edit' data-id=" + row.id + " title='Edit Data'><i class='fas fa-pencil-alt'></i></button> \n <button class='btn btn-info btn-sm' id='reset' data-id=" + row.id + " title='Reset Password'><i class='fas fa-sync-alt'></i></button>"
+				return "<button class='btn btn-danger btn-sm' id='delete' data-id=" + row.id + " data-toggle='tooltip' title='Hapus Data'><i class='fas fa-trash-alt'></i></button> \n <button class='btn btn-warning btn-sm' id='edit' data-id=" + row.id + " data-toggle='tooltip' title='Edit Data'><i class='fas fa-pencil-alt'></i></button> \n <button class='btn btn-info btn-sm' id='reset' data-id=" + row.id + " data-toggle='tooltip' title='Reset Password'><i class='fas fa-sync-alt'></i></button>"
 			}
 		}]
 	})
@@ -156,7 +157,7 @@ $(document).ready((function () {
 			enableButton()
 		},
 		success: function(result) {
-			"ok" == result.status ? ($("#modalForm").modal('show'),$("#modalTitle").html('Edit Pengguna'),$("#formInput").attr('action', CURRENT_PATH + "update"), FillForm(result.data)) : msgSweetError(result.message)
+			"ok" == result.status ? ($("#modalForm").modal('show'),$("#modalTitle").html('Edit Pengguna'),$("#formInput").attr('action', CURRENT_PATH + "update"), fillForm(result.data)) : msgSweetError(result.message)
 		},
 		error: function(err) {
 			errorCode(err)
@@ -192,9 +193,7 @@ $(document).ready((function () {
 	setStatus("off", $(this).data("id"))
 })), $("#listUser").delegate("#off", "click", (function () {
 	setStatus("on", $(this).data("id"))
-})), setInterval(() => {
-	refreshTable()
-}, 3e4), $("#btnAdd").on('click', function () {
+})), $("#btnAdd").on('click', function () {
 	clearFormInput("#formBody")
 	addFormInput("#formBody", [{
 		type: "text",
