@@ -13,7 +13,7 @@
 @section('content')
 <div class="container-fluid pb-3">
 	<div class="row">
-		<div class="col-sm-12 col-md-12 col-xl-8">
+		<div class="col-sm-12 col-md-12 col-xl-12">
 			<div class="card shadow mb-0">
 				<div class="card-body">
 					<div class="table-responsive">
