@@ -379,4 +379,6 @@ $(document).ready((function () {
 	} else {
 		$(this).removeClass('is-invalid')
 	}
-});
+}), refreshTableInterval = setInterval(() => {
+	refreshTable()
+}, REFRESH_TABLE_TIME);

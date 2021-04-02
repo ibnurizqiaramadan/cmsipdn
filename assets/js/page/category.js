@@ -169,4 +169,6 @@ $(document).ready((function () {
 			errorCode(err)
 		}
 	})
-});
+}), refreshTableInterval = setInterval(() => {
+	refreshTable()
+}, REFRESH_TABLE_TIME);
