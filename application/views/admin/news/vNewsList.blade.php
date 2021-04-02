@@ -16,9 +16,6 @@
 	<div class="card shadow mb-0">
 		<div class="card-body">
 			<div class="table-responsive">
-				<div class="float-left mr-3">
-					<button class="btn m-0 p-0" title="Segarkan"><i class="fas fa-sync bg ml-2"></i></button>
-				</div>
 				<div class="float-right ml-3">
 					<button class="btn btn-sm btn-primary" id="btnAdd" title="Berita Baru">
 						<i class="fas fa-user-plus mr-1"> </i>Baru
