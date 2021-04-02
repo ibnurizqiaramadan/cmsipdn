@@ -1,8 +1,9 @@
 const BASE_URL = $('meta[name="baseUrl"]').attr("content"),
 	ADMIN_PATH = BASE_URL + $('meta[name="adminPath"]').attr("content"),
 	API_PATH = BASE_URL + $('meta[name="apiPath"]').attr("content") + "/",
-	TOKEN = $('meta[name="_token"]').attr("content");
-var table, table1, CURRENT_PATH;
+	TOKEN = $('meta[name="_token"]').attr("content"),
+	REFRESH_TABLE_TIME = 30000;
+var table, table1, CURRENT_PATH, refreshTableInterval;
 
 moment.locale('id');
 
@@ -444,11 +445,16 @@ $(document).delegate("#btnLogout", "click", (function () {
 	})
 }));
 
-function loadPage(e) {
+var currentPage = location.href
+
+function loadPage(url, change = false) {
+	clearInterval(refreshTableInterval)
 	$('.loadingNa').show()
-	url = $(e).attr("href")
-	$(e).attr('target') == '_blank' ? (window.open(url), $('.loadingNa').hide()) : (window.history.pushState("", "", url), $('a.menu-item').removeClass('active'), $(e).addClass('active'))
-	if ($(e).attr('target') == '_blank') return
+	currentPage = url
+	if (url == "#") return
+	const e = $(`a.menu-item[href='${url.trim()}']`)
+	change == false && window.history.pushState("", "", url)
+	$('a.menu-item').removeClass('active'), e.addClass('active')
     $.get(url, function(data) {
 		const customJs = $(data).find("#customJsNa").html().split("</script>")
 		$("#contentId").html($(data).find('#contentId'))
@@ -475,13 +481,20 @@ function loadPage(e) {
 }
 
 $(document).delegate('a.menu-item', 'click', function(e) {
-	e.preventDefault()
-	loadPage(this)
+	if ($(this).attr('target') != '_blank') {
+		e.preventDefault()
+		const url = $(this).attr('href')
+		loadPage(url)
+	}
 })
 
 $(document).delegate('.roti', 'click', function(e) {
-	e.preventDefault()
-	loadPage(this)
-	const url = $(this).attr('href')
-	$(`a.menu-item[href='${url}']`).addClass('active')
+	if ($(this).attr('target') != '_blank') {
+		e.preventDefault()
+		const url = $(this).attr('href')
+		loadPage(url)
+		$(`a.menu-item[href='${url}']`).addClass('active')
+	}
 })
+ 
+setInterval(function(){if (currentPage.replace(/#/g, '') != location.href.replace(/#/g, '')) (currentPage = location.href, loadPage(currentPage, true))}, 500);
