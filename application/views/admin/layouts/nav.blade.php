@@ -40,12 +40,12 @@
 						<p>Berita</p>
 					</a>
 				</li>
-				<li class="nav-item">
+				{{-- <li class="nav-item">
 					<a href="{{ base_url(ADMIN_PATH.'/event') }}" class="nav-link menu-item @isset($subMenu) {{ $subMenu == 'event' ? 'active' : '' }} @endisset">
 						<i class="fas fa-calendar-check nav-icon"></i>
 						<p>Event</p>
 					</a>
-				</li>
+				</li> --}}
 			</ul>
 		</li>
         
@@ -58,7 +58,7 @@
 				</p>
 			</a>
 			<ul class="nav nav-treeview">
-				<li class="nav-item">
+				{{-- <li class="nav-item">
 					<a href="./index.html" class="nav-link">
 						<i class="far fa-circle nav-icon"></i>
 						<p>Dashboard v1</p>
@@ -75,7 +75,7 @@
 						<i class="far fa-circle nav-icon"></i>
 						<p>Dashboard v3</p>
 					</a>
-				</li>
+				</li> --}}
 			</ul>
 		</li>
 		
