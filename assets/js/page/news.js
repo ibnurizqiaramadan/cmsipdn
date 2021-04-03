@@ -91,7 +91,7 @@ function initTable() {
 			targets: [1],
 			orderable: !0,
 			render: function (data, type, row) {
-				let html = row.title.length > 50 ? row.title.substr(0, 50) + '...' : row.title
+				let html = escapeHtml(row.title.length > 50 ? row.title.substr(0, 50) + '...' : row.title)
 				let tags = JSON.parse(row.category) ?? []
 				let tag_ = ''
 				let title = ''
@@ -115,7 +115,7 @@ function initTable() {
 			orderable: !0,
 			sClass: "text-center align-middle",
 			render: function (data, type, row) {
-				return `<span class="text-justify">${row.author}</span>`
+				return `<span class="text-justify">${escapeHtml(row.author)}</span>`
 			}
 		}, {
 			targets: [6],
