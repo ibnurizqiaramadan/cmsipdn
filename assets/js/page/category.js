@@ -1,6 +1,6 @@
 CURRENT_PATH = ADMIN_PATH + "/category/";
 
-function refreshTable() {
+function refreshData() {
 	table.ajax.reload(null, !1)
 }
 $(document).ready((function () {
@@ -67,7 +67,7 @@ $(document).ready((function () {
 					disableButton()
 				},
 				success: function (result) {
-					"ok" == result.status ? (enableButton(), toastSuccess(result.message), refreshTable()) : toastError(result.message, "Gagal")
+					"ok" == result.status ? (enableButton(), toastSuccess(result.message), refreshData()) : toastError(result.message, "Gagal")
 				},
 				error: function (error) {
 					errorCode(error)
@@ -163,12 +163,12 @@ $(document).ready((function () {
 			enableButton()
 		},
 		success: function (e) {
-			validate(e.validate.input),e.validate.success&&("ok"==e.status?(toastSuccess(e.message),refreshTable(),1==e.modalClose&&$("#modalForm").modal("hide"),clearInput(e.validate.input)):toastWarning(e.message));
+			validate(e.validate.input),e.validate.success&&("ok"==e.status?(toastSuccess(e.message),refreshData(),1==e.modalClose&&$("#modalForm").modal("hide"),clearInput(e.validate.input)):toastWarning(e.message));
 		},
 		error: function(err) {
 			errorCode(err)
 		}
 	})
 }), refreshTableInterval = setInterval(() => {
-	refreshTable()
+	refreshData()
 }, REFRESH_TABLE_TIME);
