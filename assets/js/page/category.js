@@ -98,7 +98,7 @@ $(document).ready((function () {
 			enableButton()
 		},
 		success: function(result) {
-			"ok" == result.status ? ($("#modalForm").modal('show'),$("#modalTitle").html('Edit Pengguna'),$("#formInput").attr('action', CURRENT_PATH + "update"), fillForm(result.data)) : msgSweetError(result.message)
+			"ok" == result.status ? ($("#modalForm").modal('show'),$("#modalTitle").html('Edit Kategori'),$("#formInput").attr('action', CURRENT_PATH + "update"), fillForm(result.data)) : msgSweetError(result.message)
 		},
 		error: function(err) {
 			errorCode(err)
@@ -141,7 +141,7 @@ $(document).ready((function () {
         name: "name",
         label: "Kategori",
     }])
-	$("#modalTitle").html('Tambah Pengguna')
+	$("#modalTitle").html('Tambah Kategori')
 	$("#formInput").attr('action', CURRENT_PATH + "store")
 	$("#modalForm").modal('show')
 }), $("#formInput").submit(function(e) {
