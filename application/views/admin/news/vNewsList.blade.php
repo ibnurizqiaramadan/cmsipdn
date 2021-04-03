@@ -18,7 +18,7 @@
 			<div class="table-responsive">
 				<div class="float-right ml-3">
 					<button class="btn btn-sm btn-primary" id="btnAdd" title="Berita Baru">
-						<i class="fas fa-user-plus mr-1"> </i>Baru
+						<i class="fas fa-plus mr-1"> </i>Baru
 					</button>
 				</div>
 				<table id="listNews" class="table table-striped table-bordered" style="width:100%">
