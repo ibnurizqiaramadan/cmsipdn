@@ -33,7 +33,7 @@ $route["$apiPath/home/news/list"] = 'api/ApiHome';
 // get data tables
 $route = array_merge($route, [
     "$apiPath/data/users"       => 'admin/C_users/data',
-    "$apiPath/data/category"    => 'admin/C_Category/data',
+    "$apiPath/data/category"    => 'admin/C_category/data',
     "$apiPath/data/news"        => 'admin/C_news/data',
 ]);
 
