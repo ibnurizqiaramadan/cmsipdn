@@ -176,8 +176,8 @@ function fillForm(data) {
 
 function checkPilihan(options = {}) {
 	!$("#checkedListData").length && $('table').append("<input type='hidden' id='checkedListData'>")
-	const dipilih = $("#checkedListData").val().substr(0, $("#checkedListData").val().length - 1)
-	const pilihanNa = dipilih.split(",")
+	const dipilih = $("#checkedListData").val()?.substr(0, $("#checkedListData").val().length - 1)
+	const pilihanNa = dipilih?.split(",") ?? []
 	const dipilihNa = $("input[id^='checkItem-']");
 	const jumlahInput = dipilihNa.length
 	const table = $(options.table).DataTable()
@@ -220,7 +220,7 @@ function checkPilihan(options = {}) {
 
 function addFloatingButton(options = {}) {
 	const float = $("#floatButton")
-	if (float.html().trim() == '') {
+	if (float.html()?.trim() == '') {
 		const path = options.path ?? BASE_URL
 		const table = options.table
 		const button = {
@@ -448,6 +448,7 @@ $(document).delegate("#btnLogout", "click", (function () {
 var currentPage = location.href
 
 function loadPage(url, change = false) {
+	if (url == currentPage) return typeof refreshData === 'function' && refreshData()
 	clearInterval(refreshTableInterval)
 	$('.loadingNa').show()
 	currentPage = url
