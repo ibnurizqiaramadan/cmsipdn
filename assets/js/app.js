@@ -448,7 +448,7 @@ $(document).delegate("#btnLogout", "click", (function () {
 var currentPage = location.href
 
 function loadPage(url, change = false) {
-	if (url == currentPage) return typeof refreshData === 'function' && refreshData()
+	// if (url == currentPage) return typeof refreshData === 'function' && refreshData()
 	clearInterval(refreshTableInterval)
 	$('.loadingNa').show()
 	currentPage = url
@@ -457,21 +457,10 @@ function loadPage(url, change = false) {
 	change == false && window.history.pushState("", "", url)
 	$('a.menu-item').removeClass('active'), e.addClass('active')
     $.get(url, function(data) {
-		const customJs = $(data).find("#customJsNa").html().split("</script>")
-		$("#contentId").html($(data).find('#contentId'))
+		$("#contentId").html($(data).find('#contentId').html())
 		$(".webTitle").html($(data).filter('title').text())
-		$("#rotiId").html($(data).find('#rotiId'))
-        $("#jsSection").html($(data).find('#jsSection'))
-		let jsNa = ''
-		customJs.forEach(scriptJs => {
-			if (scriptJs.trim() == '') return
-			let js = scriptJs.replace(/[<>"=]+/g, "")
-			js = js.replace(/defer+/g, '')
-			js = js.replace(/src+/g, '')
-			js = js.replace(/script+/g, '')
-			jsNa += `<script src=${js.trim()}></script>`
-		})
-		$('.cusctomJs').html(jsNa)
+		$("#rotiId").html($(data).find('#rotiId')).html()
+        $("#customJsNa").html($(data).filter('#customJsNa').html())
     }).fail(function(err) {
 		$("#contentId").html(`<div class="container">${err.statusText}</div>`)
 		$('.loadingNa').hide()

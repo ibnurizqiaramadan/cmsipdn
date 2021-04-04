@@ -1,8 +1,6 @@
 @include('admin.layouts.head')
 
-<div id="jsSection">
-	@include('admin.layouts.js')
-</div>
+@include('admin.layouts.js')
 
 <div class="loadingNa">
 	<div class="loadingGan">
@@ -131,9 +129,6 @@
 				@yield('content')
 			</section>
 			<!-- /.content -->
-		</div>
-		<div class="cusctomJs">
-
 		</div>
 		<!-- /.content-wrapper -->
 		<footer class="main-footer">

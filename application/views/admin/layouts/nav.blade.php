@@ -40,12 +40,12 @@
 						<p>Berita</p>
 					</a>
 				</li>
-				{{-- <li class="nav-item">
-					<a href="{{ base_url(ADMIN_PATH.'/event') }}" class="nav-link menu-item @isset($subMenu) {{ $subMenu == 'event' ? 'active' : '' }} @endisset">
+				<li class="nav-item">
+					<a href="{{ base_url(ADMIN_PATH.'/events') }}" class="nav-link menu-item @isset($subMenu) {{ $subMenu == 'events' ? 'active' : '' }} @endisset">
 						<i class="fas fa-calendar-check nav-icon"></i>
 						<p>Event</p>
 					</a>
-				</li> --}}
+				</li>
 			</ul>
 		</li>
         
