@@ -449,10 +449,10 @@ var currentPage = location.href
 
 function loadPage(url, change = false) {
 	// if (url == currentPage) return typeof refreshData === 'function' && refreshData()
+	if (url == "#") return
 	clearInterval(refreshTableInterval)
 	$('.loadingNa').show()
 	currentPage = url
-	if (url == "#") return
 	const e = $(`a.menu-item[href='${url.trim()}']`)
 	change == false && window.history.pushState("", "", url)
 	$('a.menu-item').removeClass('active'), e.addClass('active')
