@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
+	<meta property="og:title" content="CMSIPDN">
+    <meta property="og:description" content="Administrator Page CMSIPDN">
+    <meta property="og:image" content="{{getAssetsFiles('img/mainlogo.png')}}">
+    <meta property="og:url" content="{{ BASE_URL }}{{ ADMIN_PATH }}">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="baseUrl" content="{{ base_url() }}">
 	<meta name="adminPath" content="{{ ADMIN_PATH }}">
