@@ -2,6 +2,28 @@
 
 @include('admin.layouts.js')
 
+<style>
+	/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #F4F6F9; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #999; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #343A40; 
+}
+</style>
+
 <div class="loadingNa">
 	<div class="loadingGan">
 		<div class="ldio-xvietdzji3j">
