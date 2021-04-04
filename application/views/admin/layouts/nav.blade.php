@@ -9,7 +9,6 @@
 				</p>
 			</a>
         </li>
-        
         <li class="nav-item">
 			<a href="{{ base_url(ADMIN_PATH.'/users') }}" class="nav-link menu-item @isset($menu) {{ $menu == 'users' ? 'active' : '' }} @endisset">
 				<i class="nav-icon fas fa-users"></i>
@@ -18,7 +17,6 @@
 				</p>
 			</a>
         </li>
-
 		<li class="nav-item @isset($menu) {{ $menu == 'post' ? 'menu-open' : '' }} @endisset">
 			<a href="#" class="nav-link">
 				<i class="nav-icon fas fa-paper-plane"></i>
@@ -48,7 +46,6 @@
 				</li>
 			</ul>
 		</li>
-        
 		<li class="nav-item">
 			<a href="#" class="nav-link">
 				<i class="nav-icon fas fa-cogs"></i>
@@ -78,9 +75,7 @@
 				</li> --}}
 			</ul>
 		</li>
-		
 		<li class="nav-header">Pengaturan Profile</li>
-
 	</ul>
 </nav>
 <!-- /.sidebar-menu -->

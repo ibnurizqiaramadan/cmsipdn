@@ -1,29 +1,19 @@
 @include('admin.layouts.head')
-
 @include('admin.layouts.js')
-
 <style>
-	/* width */
 ::-webkit-scrollbar {
   width: 10px;
 }
-
-/* Track */
 ::-webkit-scrollbar-track {
   background: #F4F6F9; 
 }
- 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #999; 
 }
-
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #343A40; 
 }
 </style>
-
 <div class="loadingNa">
 	<div class="loadingGan">
 		<div class="ldio-xvietdzji3j">
@@ -38,7 +28,6 @@
 		</div>
 	</div>
 </div>
-
 <body class="hold-transition sidebar-mini layout-fixed">
 	<div class="wrapper">
 		<!-- Navbar -->
@@ -49,7 +38,6 @@
 					<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
 				</li>
 			</ul>
-
 			<!-- Right navbar links -->
 			<ul class="navbar-nav ml-auto">
 				<!-- Notifications Dropdown Menu -->
@@ -79,7 +67,6 @@
 						<a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
 					</div>
 				</li>
-
 				<li class="nav-item dropdown">
 					<a class="nav-link" data-toggle="dropdown" href="#">
 						<i class="fas fa-power-off"></i>
@@ -93,7 +80,6 @@
 			</ul>
 		</nav>
 		<!-- /.navbar -->
-
 		<!-- Main Sidebar Container -->
 		<aside class="main-sidebar sidebar-dark-primary elevation-4">
 			<!-- Brand Logo -->
@@ -102,7 +88,6 @@
 					class="brand-image img-circle elevation-3" style="opacity: .8">
 				<span class="brand-text font-weight-light">IPDN</span>
 			</a>
-
 			<!-- Sidebar -->
 			<div class="sidebar">
 				<!-- Sidebar user panel (optional) -->
@@ -118,34 +103,27 @@
 				<div id="navSection">
 					@include('admin/layouts/nav')
 				</div>
-
 			</div>
 			<!-- /.sidebar -->
 		</aside>
-
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
 			<!-- Content Header (Page header) -->
 			<div class="content-header">
 				<div class="container-fluid">
 					<div class="row mb-2">
-						<div class="col-sm-6">
-							{{-- <h1 class="m-0">{{ $title ?? 'Administrator' }}</h1> --}}
+						<div class="col-sm-12">
 							<ol class="breadcrumb" id="rotiId">
 								@foreach ($roti as $menu => $link)
 								@php $param = explode(":", $menu);$target = $param[1] == 'blank' ? '_blank' : '';@endphp
-								<li class="breadcrumb-item {{ $param[1] }}"> {!! $link != '' ? "<a class='roti' href='$link'
-										target='$target'>" . $param[0] . "</a>" : $param[0] !!}</li>
+								<li class="breadcrumb-item"> {!! $link != '' ? "<a class='roti' href='$link' target='$target'>" . $param[0] . "</a>" : $param[0] !!}</li>
 								@endforeach
 							</ol>
-						</div><!-- /.col -->
-						<div class="col-sm-6">
 						</div><!-- /.col -->
 					</div><!-- /.row -->
 				</div><!-- /.container-fluid -->
 			</div>
 			<!-- /.content-header -->
-
 			<!-- Main content -->
 			<section class="content" id="contentId">
 				@yield('content')
@@ -154,25 +132,13 @@
 		</div>
 		<!-- /.content-wrapper -->
 		<footer class="main-footer">
-			{{-- <strong>Copyright &copy; 2014-2020 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.1.0-rc
-    </div> --}}
 			<strong>Copyright &copy; 2014-2020 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
 			All rights reserved.
 			<div class="float-right d-none d-sm-inline-block">
 				<b>Version</b> 1.0.0
 			</div>
 		</footer>
-
-		<!-- Control Sidebar -->
-		<aside class="control-sidebar control-sidebar-dark">
-			<!-- Control sidebar content goes here -->
-		</aside>
-		<!-- /.control-sidebar -->
 	</div>
 	<!-- ./wrapper -->
 </body>
-
 </html>

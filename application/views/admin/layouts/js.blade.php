@@ -15,7 +15,6 @@
 <script src="{{ base_url('assets/js/module/jquery.validate.min.js') }}" defer></script>
 <script src="{{ base_url('assets/js/module/additional-methods.min.js') }}" defer></script>
 <script src="{{ base_url('assets/js/app.js') }}" defer></script>
-
 <div id="customJsNa">
 @yield('js')
 </div>
