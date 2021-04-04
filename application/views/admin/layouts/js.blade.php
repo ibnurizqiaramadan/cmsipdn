@@ -17,5 +17,5 @@
 <script src="{{ base_url('assets/js/app.js') }}" defer></script>
 
 <div id="customJsNa">
-    @yield('js')
+@yield('js')
 </div>
