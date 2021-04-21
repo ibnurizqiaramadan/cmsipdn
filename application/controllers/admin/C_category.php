@@ -71,8 +71,11 @@ class C_category extends CI_Controller
         try {
             $validate = Validate([
                 'name' => 'required|min:3|name',
-            ], ['slug' => str_replace(" ", '-', strtolower(Input_('name')))]);
-            $cat = $this->db->select('name')->from($this->table)->where('name', Input_('name'))->get()->row();
+            ], [
+                'slug' => str_replace(" ", '-', strtolower(Input_('name'))), 
+                'user_id' => $this->session->userId    
+            ]);
+            $cat = $this->db->select('slug')->from($this->table)->where('slug', str_replace(" ", '-', strtolower(Input_('name'))))->get()->row();
             if ($cat) $validate = ValidateAdd($validate, 'name', 'Kategori sudah ada');
             if (!$validate['success']) throw new Exception("Error Processing Request");
             if (!Create($this->table, Guard($validate['data'], ['id', 'token']))) throw new Exception("Gagal memasukan data !");
@@ -101,8 +104,10 @@ class C_category extends CI_Controller
     {
         try {
             $validate = Validate([
-                'name' => 'required|min:6|name',
+                'name' => 'required|min:3|name',
             ]);
+            $cat = $this->db->select('slug')->from($this->table)->where('slug', str_replace(" ", '-', strtolower(Input_('name'))))->get()->row();
+            if ($cat) $validate = ValidateAdd($validate, 'name', 'Kategori sudah ada');
             if (!$validate['success']) throw new Exception("Error Processing Request");
             if (!Update($this->table, Guard($validate['data'], ['id', 'token', 'password', 'active']), [$this->req->encKey('id') => Input_('id')])) throw new Exception("Tidak ada perubahan");
 

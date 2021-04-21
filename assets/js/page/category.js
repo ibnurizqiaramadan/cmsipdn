@@ -4,7 +4,8 @@ function refreshData() {
 	table.ajax.reload(null, !1)
 }
 $(document).ready((function () {
-	table = $("#listUser").DataTable({
+	$("#actionField").attr('style', 'width:115px; text-align:center;')
+	table = $("#listCat").DataTable({
 		processing: !0,
 		serverSide: !0,
 		order: [],
@@ -16,7 +17,7 @@ $(document).ready((function () {
 			},
 			complete: function () {
 				checkPilihan({
-					table: "#listUser",
+					table: "#listCat",
 					buttons: ['delete'],
 					path: CURRENT_PATH
 				})
@@ -26,15 +27,9 @@ $(document).ready((function () {
 			}
 		},
 		fnCreatedRow: function (nRow, aData, iDataIndex) {
-
+			$(nRow).attr('data-id', aData.id)
 		},
-		columns: [{
-			data: "id"
-		}, {
-			data: "name"
-		}, {
-			data: "slug"
-		}],
+		columns: dataColumnTable(['id', 'name', 'slug']),
 		columnDefs: [{
 			targets: [0],
 			orderable: !1,
@@ -51,7 +46,7 @@ $(document).ready((function () {
 			}
 		}]
 	})
-})), $("#listUser").delegate("#delete", "click", (function () {
+})), $("#listCat").delegate("#delete", "click", (function () {
 	confirmSweet("Anda yakin ingin menghapus data ?").then((result) => {
 		if (isConfirmed(result)) {
 			let id = $(this).data("id")
@@ -75,7 +70,7 @@ $(document).ready((function () {
 			})
 		}
 	})
-})), $("#listUser").delegate("#edit", "click", (function () {
+})), $("#listCat").delegate("#edit", "click", (function () {
 	let id = $(this).data("id");
 	$.ajax({
 		url: API_PATH + "data/category/get/" + id,
@@ -104,7 +99,7 @@ $(document).ready((function () {
 			errorCode(err)
 		}
 	})
-})), $("#listUser").delegate("#reset", "click", (function (e) {
+})), $("#listCat").delegate("#reset", "click", (function (e) {
 	confirmSweet("Anda yakin ingin mereset password ?").then((result) => {
 		if (isConfirmed(result)) {
 			let id = $(this).data("id");
@@ -130,9 +125,9 @@ $(document).ready((function () {
 			})
 		}
 	})
-})), $("#listUser").delegate("#on", "click", (function () {
+})), $("#listCat").delegate("#on", "click", (function () {
 	setStatus("off", $(this).data("id"))
-})), $("#listUser").delegate("#off", "click", (function () {
+})), $("#listCat").delegate("#off", "click", (function () {
 	setStatus("on", $(this).data("id"))
 })), $("#btnAdd").on('click', function () {
 	clearFormInput("#formBody")
@@ -172,3 +167,15 @@ $(document).ready((function () {
 }), refreshTableInterval = setInterval(() => {
 	refreshData()
 }, REFRESH_TABLE_TIME);
+$("#listCat").delegate('tr', 'click', function(e) {
+	if ($(e.target).is('td')) {
+		const data = $(this).data('id')
+		if ($(`input[id="checkItem-${data}"]`).is(":checked")) {
+			$(`input[id=checkItem-${data}]`).prop('checked', false)
+			pilihItem(data)
+		} else {
+			$(`input[id=checkItem-${data}]`).prop('checked', true)
+			pilihItem(data)
+		}
+	}
+})

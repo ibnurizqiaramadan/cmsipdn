@@ -1,4 +1,4 @@
-CURRENT_PATH = ADMIN_PATH + "/news/";
+CURRENT_PATH = ADMIN_PATH + "/events/";
 
 function refreshData() {
 	table.ajax.reload(null, !1)
@@ -35,19 +35,19 @@ function setStatus(status, id) {
 function initTable() {
 	$("#statusField").attr('style', 'width:70px')
 	$("#actionField").attr('style', 'width:115px')
-	table = $("#listNews").DataTable({
+	table = $("#listEvents").DataTable({
 		processing: !0,
 		serverSide: !0,
 		order: [],
 		ajax: {
-			url: API_PATH + "data/news",
+			url: API_PATH + "data/events",
 			type: "POST",
 			data: {
 				_token: TOKEN
 			},
 			complete: function () {
 				checkPilihan({
-					table: "#listNews",
+					table: "#listEvents",
 					buttons: ['delete', 'active', 'deactive'],
 					path: CURRENT_PATH
 				})
@@ -57,27 +57,19 @@ function initTable() {
 			}
 		},
 		fnCreatedRow: function (nRow, aData, iDataIndex) {
-			$(nRow).attr('data-id', aData.id)
+
 		},
-		columns: [{
-			data: "id"
-		}, {
-			data: "title"
-		}, {
-			data: "slug"
-		}, {
-			data: 'cover'
-		}, {
-			data: "author"
-		}, {
-			data: "category"
-		}, {
-			data: "created_at"
-		}, {
-			data: "updated_at"
-		}, {
-			data: "status"
-		}],
+		columns: dataColumnTable([
+				'id', 
+				'title', 
+				'slug', 
+				'author', 
+				'tempat', 
+				'map', 
+				'created_at', 
+				'updated_at',
+				'status'
+			]),
 		columnDefs: [{
 			targets: [0],
 			orderable: !1,
@@ -94,22 +86,13 @@ function initTable() {
 			orderable: !0,
 			render: function (data, type, row) {
 				let html = escapeHtml(row.title.length > 50 ? row.title.substr(0, 50) + '...' : row.title)
-				const dataTags = JSON.parse(row.category)
-				let tags = dataTags == null ? [] : dataTags
-				let tag_ = ''
-				let title = ''
-				for (let index = 0; index < tags.length; index++) {
-					const tagName = tags[index].split(":")[1];
-					index < 1 ? tag_ += `<span class="text-xs bg-info p-1 pl-2 pr-2 rounded">${tagName}</span> ` : title += `${tagName}\n`
-				}
-				tag_ += tags.length > 1 ? `<span class="text-xs p-1 pl-2 bg-info rounded-circle" title="${title}"> ${tags.length - 1}+ </span>` : ''
 				return `
 					<div class="h6">
 						${html}
 					</div>
 					<div>
 						<span class="text-sm mr-2 text-muted">dibuat : ${moment(row.created_at).format("dddd, DD MMMM YYYY")}</span>
-						<span class="float-right">${tag_}</span>
+						<span class="float-right">${1}</span>
 					</div>
 				`
 			}
@@ -142,11 +125,12 @@ function initTable() {
 			}
 		}]
 	})
+	// console.log(table.DataTable())
 }
 
 $(document).ready((function () {
 	initTable()
-})), $("#listNews").delegate("#delete", "click", (function () {
+})), $("#listEvents").delegate("#delete", "click", (function () {
 	confirmSweet("Anda yakin ingin menghapus data ?").then((result) => {
 		if (isConfirmed(result)) {
 			let id = $(this).data("id")
@@ -173,7 +157,7 @@ $(document).ready((function () {
 			})
 		}
 	})
-})), $("#listNews").delegate("#edit", "click", (function () {
+})), $("#listEvents").delegate("#edit", "click", (function () {
 	let id = $(this).data("id");
 	$.ajax({
 		url: API_PATH + "data/news/get/" + id,
@@ -249,7 +233,7 @@ $(document).ready((function () {
 			errorCode(err)
 		}
 	})
-})), $("#listNews").delegate("#reset", "click", (function (e) {
+})), $("#listEvents").delegate("#reset", "click", (function (e) {
 	confirmSweet("Anda yakin ingin mereset password ?").then((result) => {
 		if (isConfirmed(result)) {
 			let id = $(this).data("id");
@@ -275,9 +259,9 @@ $(document).ready((function () {
 			})
 		}
 	})
-})), $("#listNews").delegate("#on", "click", (function () {
+})), $("#listEvents").delegate("#on", "click", (function () {
 	setStatus("off", $(this).data("id"))
-})), $("#listNews").delegate("#off", "click", (function () {
+})), $("#listEvents").delegate("#off", "click", (function () {
 	setStatus("on", $(this).data("id"))
 })), $("#btnAdd").on('click', function () {
 	clearFormInput("#formBody")
@@ -385,15 +369,3 @@ $(document).ready((function () {
 }), refreshTableInterval = setInterval(() => {
 	refreshData()
 }, REFRESH_TABLE_TIME);
-$("#listNews").delegate('tr', 'click', function(e) {
-	if ($(e.target).is('td')) {
-		const data = $(this).data('id')
-		if ($(`input[id="checkItem-${data}"]`).is(":checked")) {
-			$(`input[id=checkItem-${data}]`).prop('checked', false)
-			pilihItem(data)
-		} else {
-			$(`input[id=checkItem-${data}]`).prop('checked', true)
-			pilihItem(data)
-		}
-	}
-})

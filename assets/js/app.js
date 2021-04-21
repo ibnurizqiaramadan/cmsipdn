@@ -182,6 +182,7 @@ function checkPilihan(options = {}) {
 	const jumlahInput = dipilihNa.length
 	const table = $(options.table).DataTable()
 	const column = table.column(0)
+	$(column.header()).attr('style', 'width:20px')
 	$(column.footer()).html(
 		"<input type='checkbox' class='checkAllItem'>"
 	);
@@ -200,8 +201,10 @@ function checkPilihan(options = {}) {
 		if ($(element).is(":checked")) {
 			jmlCek++
 			btn.prop('disabled', true)
+			$(`tr[data-id=${element.value}]`).addClass('row-selected')
 		} else {
 			btn.prop('disabled', false)
+			$(`tr[data-id=${element.value}]`).removeClass('row-selected')
 		}
 	}
 	if (jmlCek == jumlahInput) {
@@ -413,12 +416,16 @@ $(document).delegate(".checkAllItem", 'click', function () {
 })
 
 $(document).delegate("input[id^='checkItem-']", 'click', function (e) {
+	const value = $(this).val()
+	pilihItem(value)
+})
+
+function pilihItem(idCek) {
 	!$("#checkedListData").length && $('table').append("<textarea id='checkedListData'></textarea>")
-	const id = `${$(this).val()},`
-	const idCek = id.substr(0, id.length - 1)
+	const id = `${idCek},`
 	const btn = $(`button[data-id="${idCek}"]`)
 	let dipilihna = $("#checkedListData").val()
-	if ($(this).is(":checked")) {
+	if ($(`input[id="checkItem-${idCek}"]`).is(":checked")) {
 		$("#checkedListData").val(dipilihna + id)
 		btn.prop('disabled', true)
 	} else {
@@ -426,22 +433,25 @@ $(document).delegate("input[id^='checkItem-']", 'click', function (e) {
 		btn.prop('disabled', false)
 	}
 	checkPilihan()
-})
+	// alert(idCek)
+}
 
 $(document).delegate("#btnLogout", "click", (function () {
 	confirmSweet("Anda yakin ingin keluar ?").then(result => {
-		result && $.ajax({
-			url: ADMIN_PATH + "/login/destroy",
-			type: "POST",
-			data: {
-				_token: TOKEN
-			},
-			dataType: "JSON",
-			beforeSend: function () {},
-			success: function (result) {
-				"ok" == result.status ? redirect(ADMIN_PATH + "/login") : msgSweetError(result.message)
-			}
-		})
+		if (isConfirmed(result)) { 
+			$.ajax({
+				url: ADMIN_PATH + "/login/destroy",
+				type: "POST",
+				data: {
+					_token: TOKEN
+				},
+				dataType: "JSON",
+				beforeSend: function () {},
+				success: function (result) {
+					"ok" == result.status ? redirect(ADMIN_PATH + "/login") : msgSweetError(result.message)
+				}
+			})
+		}
 	})
 }));
 
@@ -499,4 +509,10 @@ function escapeHtml(text) {
   };
   
   return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
+function dataColumnTable(data = []) {
+	let result = []
+	data.forEach(field => result.push({data: field}))
+	return result
 }

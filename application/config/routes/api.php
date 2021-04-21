@@ -35,6 +35,7 @@ $route = array_merge($route, [
     "$apiPath/data/users"       => 'admin/C_users/data',
     "$apiPath/data/category"    => 'admin/C_category/data',
     "$apiPath/data/news"        => 'admin/C_news/data',
+    "$apiPath/data/events"        => 'admin/C_events/data',
 ]);
 
 // get data options

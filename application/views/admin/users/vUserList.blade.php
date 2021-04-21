@@ -24,8 +24,8 @@
 							<th>Username</th>
 							<th>Name</th>
 							<th>Level</th>
-							<th>Active</th>
-							<th>Aksi</th>
+							<th id="statusField">Active</th>
+							<th id="actionField">Aksi</th>
 						</tr>
 					</thead>
 
@@ -72,5 +72,5 @@
 @endsection
 
 @section('js')
-<script src="{{ base_url('assets/js/page/users.js') }}" defer></script>
+<script src="{{ base_url('assets/js/page/users.min.js') }}" defer></script>
 @endsection

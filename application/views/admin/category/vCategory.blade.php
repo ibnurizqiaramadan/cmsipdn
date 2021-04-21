@@ -11,10 +11,17 @@
 ])
 
 @section('content')
+<style>
+	tbody tr:hover {
+        background: #eee;
+        box-shadow: 0 1px 2px rgb(242,242,242);
+        cursor: pointer;
+    }
+</style>
 <div class="container-fluid pb-3">
 	<div class="row">
 		<div class="col-sm-12 col-md-12 col-xl-12">
-			<div class="card shadow mb-0">
+			<div class="card border-0 shadow mb-0">
 				<div class="card-body">
 					<div class="table-responsive">
 						<div class="float-right ml-3">
@@ -22,13 +29,13 @@
 								<i class="fas fa-plus mr-1"> </i>Baru
 							</button>
 						</div>
-						<table id="listUser" class="table table-striped table-bordered" style="width:100%">
+						<table id="listCat" class="table table-bordered" style="width:100%">
 							<thead>
 								<tr>
 									<th></th>
 									<th>Kategori</th>
 									<th>Slug</th>
-									<th>Aksi</th>
+									<th id="actionField">Aksi</th>
 								</tr>
 							</thead>
 
@@ -75,5 +82,5 @@
 @endsection
 
 @section('js')
-<script src="{{ base_url('assets/js/page/category.js') }}" defer></script>
+<script src="{{ base_url('assets/js/page/category.min.js') }}" defer></script>
 @endsection

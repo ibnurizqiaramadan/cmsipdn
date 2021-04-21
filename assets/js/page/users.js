@@ -32,7 +32,8 @@ function refreshData() {
 	table.ajax.reload(null, !1)
 }
 $(document).ready((function () {
-
+	$("#statusField").attr('style', 'width:70px')
+	$("#actionField").attr('style', 'width:115px; text-align:center')
 	table = $("#listUser").DataTable({
 		processing: !0,
 		serverSide: !0,
@@ -57,17 +58,9 @@ $(document).ready((function () {
 		fnCreatedRow: function (nRow, aData, iDataIndex) {
 
 		},
-		columns: [{
-			data: "id"
-		}, {
-			data: "username"
-		}, {
-			data: "name"
-		}, {
-			data: "role"
-		}, {
-			data: "active"
-		}],
+		columns: dataColumnTable([
+			'id', 'username', 'name', 'role', 'active'
+		]),
 		columnDefs: [{
 			targets: [0],
 			orderable: !1,

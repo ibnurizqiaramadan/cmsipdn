@@ -25,5 +25,6 @@
   	<link rel="stylesheet" href="{{ base_url('assets/admin/') }}plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 	<link rel="stylesheet" href="{{ base_url('assets/modules/iziToast.min.css') }}">
 	<link rel="stylesheet" href="{{ base_url('assets/css/loading.css') }}">
+	<link rel="stylesheet" href="{{ base_url('assets/css/custom.css') }}">
 @yield('head')
 </head>

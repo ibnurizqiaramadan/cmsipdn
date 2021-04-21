@@ -1,41 +1,68 @@
 <?php
 
-class C_news extends CI_Controller
+class C_events extends CI_Controller
 {
     function __construct()
     {
         parent::__construct();
-        $this->table = 't_news';
-        $this->load->model('admin/Master_model', 'news');
+        $this->table = 't_events';
+        $this->load->model('admin/Master_model', 'events');
     }
 
     public function index()
     {
-        return view('admin/news/vNewsList');
+        return view('admin/events/vEventsList');
     }
 
     public function data()
     {
         try {
-            if (!isPost()) throw new Exception("Bad Request");
-            $this->news->table = $this->table . " as news";
-            $this->news->columnOrder = [null, 'title', 'u.name', null, 'news.updated_at', null, 'news.status'];
-            $this->news->columnSearch = ['news.title', 'news.slug'];
-            $this->news->tableJoin = [
-                't_users as u' => 'u.id = news.user_id'
+            // if (!isPost()) throw new Exception("Bad Request");
+            $this->events->table = $this->table . " as e";
+            $this->events->columnOrder = [null, 'title', 'u.name', null, 'events.updated_at', null, 'events.status'];
+            $this->events->columnSearch = ['e.title', 'e.slug'];
+            $this->events->tableJoin = [
+                't_users as u' => 'u.id = e.user_id'
             ];
-            $this->news->selectData = "news.id,
-                news.title, 
-                news.slug, 
-                news.cover, 
+            $this->events->selectData = "e.id,
+                e.title, 
+                e.slug, 
+                e.time_start,
+                e.time_end,
+                e.date_start,
+                e.date_end,
+                e.tempat,
+                e.map,
+                e.longitude,
+                e.latitude,
+                e.contact,
+                e.email,
+                e.content,
                 u.name as author,
-                news.created_at,
-                news.updated_at,
-                news.status,
-                (SELECT CONCAT('[', GROUP_CONCAT(CONCAT('\"'," . $this->req->encKey('cat.id') . ",':',cat.name,'\"') SEPARATOR ','), ']' ) FROM t_news_category ncat JOIN t_category cat ON cat.id = ncat.category_id WHERE ncat.news_id = news.id) as category
+                e.created_at,
+                e.updated_at,
+                e.status,
             ";
-            $field = ['title', 'slug', 'cover', 'author', 'category', 'created_at', 'updated_at', 'status'];
-            $list = $this->news->get_datatables();
+            $field = [
+                'title', 
+                'slug', 
+                'author', 
+                'time_start',
+                'time_end',
+                'date_start',
+                'date_end',
+                'tempat',
+                'map',
+                'longitude',
+                'latitude',
+                'contact',
+                'email',
+                'content',
+                'created_at', 
+                'updated_at', 
+                'status'
+            ];
+            $list = $this->events->get_datatables();
             $data = array();
             foreach ($list as $field_) {
                 $row = array();
@@ -48,8 +75,8 @@ class C_news extends CI_Controller
             $draw = isset($_POST['draw']) ? $_POST['draw'] : null;
             $output = array(
                 "draw" => $draw,
-                "recordsTotal" => $this->news->count_all(),
-                "recordsFiltered" => $this->news->count_filtered(),
+                "recordsTotal" => $this->events->count_all(),
+                "recordsFiltered" => $this->events->count_filtered(),
                 "data" => $data,
             );
         } catch (\Throwable $th) {
@@ -75,13 +102,12 @@ class C_news extends CI_Controller
             $validate = Validate([
                 'title' => 'requred|min:6'
             ]);
-            $surat = $this->db->select('slug')->from('t_news')->where('slug', str_replace(" ", '-', strtolower(Input_('title'))))->get()->row();
+            $surat = $this->db->select('title')->from('t_news')->where('title', Input_('title'))->get()->row();
             if ($surat) $validate = ValidateAdd($validate, 'title', 'Judul sudah digunakan');
 
             $message = [
                 'status' => 'ok',
             ];
-            
         } catch (\Throwable $th) {
             $message = [
                 'status' => 'fail',
@@ -115,7 +141,7 @@ class C_news extends CI_Controller
             if (!$validate['success']) throw new Exception("Error Processing Request");
             if (!Create($this->table, $validate['data'])) throw new Exception("Gagal memasukan data !");
             $idNews = $this->db->insert_id();
-            $newsCategory = json_decode(Input_('category'))??[];
+            $newsCategory = json_decode(Input_('category')) ?? [];
             foreach ($newsCategory as $cat) {
                 $categoryId = $this->db->select('id')->from('t_category')->where($this->req->encKey('id'), $cat)->get()->row()->id;
                 $dataCategory[] = [

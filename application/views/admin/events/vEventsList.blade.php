@@ -1,23 +1,16 @@
 @extends('admin/layouts/app', [
-	'title' => 'Berita',
+	'title' => 'Events',
 	'menu' => 'post',
-	'subMenu' => 'news', 
+	'subMenu' => 'events', 
 	'roti' => [
 		'Home:blank' => base_url(), 
 		'Dashboard' => base_url(ADMIN_PATH . '/dashboard'), 
 		'Post' => '', 
-		'Berita:active' => '', 
+		'Events:active' => '', 
 	]
 ])
 
 @section('content')
-<style>
-	tbody tr:hover {
-        background: #eee;
-        box-shadow: 0 1px 2px rgb(242,242,242);
-        cursor: pointer;
-    }
-</style>
 <div class="container-fluid pb-3">
 	<div class="card shadow mb-0">
 		<div class="card-body">
@@ -27,7 +20,7 @@
 						<i class="fas fa-plus mr-1"> </i>Baru
 					</button>
 				</div>
-				<table id="listNews" class="table table-bordered" style="width:100%">
+				<table id="listEvents" class="table table-striped table-bordered" style="width:100%">
 					<thead>
 						<tr>
 							<th></th>
@@ -37,7 +30,7 @@
 							<th>Terakhir diubah</th>
 							<th>crated at</th>
 							<th id="statusField">Aktif</th>
-							<th id="aksiField">Aksi</th>
+							<th id="actionField">Aksi</th>
 						</tr>
 					</thead>
 
@@ -83,10 +76,10 @@
 		</div>
 	</div>
 </div>
-
 @endsection
 
 @section('js')
 <script src="{{ base_url('/assets/modules/ckeditor/ckeditor.js') }}" defer></script>
-<script src="{{ base_url('assets/js/page/news.min.js') }}" defer></script>
+<script src="{{ base_url('assets/js/page/events.js') }}" defer></script>
 @endsection
+
