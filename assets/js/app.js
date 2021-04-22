@@ -207,7 +207,7 @@ function checkPilihan(options = {}) {
 			$(`tr[data-id=${element.value}]`).removeClass('row-selected')
 		}
 	}
-	if (jmlCek == jumlahInput) {
+	if (jmlCek != 0 && jumlahInput != 0 && jmlCek == jumlahInput) {
 		$(".checkAllItem").prop('checked', true)
 	} else {
 		$(".checkAllItem").prop('checked', false)
