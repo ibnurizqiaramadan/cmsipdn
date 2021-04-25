@@ -1,19 +1,5 @@
 @include('admin.layouts.head')
 @include('admin.layouts.js')
-<style>
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: #F4F6F9; 
-}
-::-webkit-scrollbar-thumb {
-  background: #999; 
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #343A40; 
-}
-</style>
 <div class="loadingNa">
 	<div class="loadingGan">
 		<div class="ldio-xvietdzji3j">
@@ -28,6 +14,7 @@
 		</div>
 	</div>
 </div>
+<div id="customCss"></div>
 <body class="hold-transition sidebar-mini layout-fixed">
 	<div class="wrapper">
 		<!-- Navbar -->

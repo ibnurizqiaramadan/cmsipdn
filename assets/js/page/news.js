@@ -385,15 +385,3 @@ $(document).ready((function () {
 }), refreshTableInterval = setInterval(() => {
 	refreshData()
 }, REFRESH_TABLE_TIME);
-$("#listNews").delegate('tr', 'click', function(e) {
-	if ($(e.target).is('td')) {
-		const data = $(this).data('id')
-		if ($(`input[id="checkItem-${data}"]`).is(":checked")) {
-			$(`input[id=checkItem-${data}]`).prop('checked', false)
-			pilihItem(data)
-		} else {
-			$(`input[id=checkItem-${data}]`).prop('checked', true)
-			pilihItem(data)
-		}
-	}
-})

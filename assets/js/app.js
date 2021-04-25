@@ -182,6 +182,7 @@ function checkPilihan(options = {}) {
 	const jumlahInput = dipilihNa.length
 	const table = $(options.table).DataTable()
 	const column = table.column(0)
+	selectClick(options.table)
 	$(column.header()).attr('style', 'width:20px')
 	$(column.footer()).html(
 		"<input type='checkbox' class='checkAllItem'>"
@@ -419,6 +420,33 @@ $(document).delegate("input[id^='checkItem-']", 'click', function (e) {
 	const value = $(this).val()
 	pilihItem(value)
 })
+
+var tableSelectClickData = ""
+
+function selectClick(table = tableSelectClickData) {
+	if (tableSelectClickData == table) return
+	tableSelectClickData = table
+	$("#customCss").html(`
+	<style>
+		tbody tr:hover {
+			background: #eee;
+			box-shadow: 0 1px 2px rgb(242,242,242);
+			cursor: pointer;
+		}
+	</style>`)
+	$(table).delegate('tr', 'click', function(e) {
+		if (!$(e.target).is('button') && !$(e.target).is('i') && !$(e.target).is('input')) {
+			const data = $(this).data('id')
+			if ($(`input[id="checkItem-${data}"]`).is(":checked")) {
+				$(`input[id=checkItem-${data}]`).prop('checked', false)
+				pilihItem(data)
+			} else {
+				$(`input[id=checkItem-${data}]`).prop('checked', true)
+				pilihItem(data)
+			}
+		}
+	})
+}
 
 function pilihItem(idCek) {
 	!$("#checkedListData").length && $('table').append("<textarea id='checkedListData'></textarea>")

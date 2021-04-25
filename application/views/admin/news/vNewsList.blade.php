@@ -11,13 +11,6 @@
 ])
 
 @section('content')
-<style>
-	tbody tr:hover {
-        background: #eee;
-        box-shadow: 0 1px 2px rgb(242,242,242);
-        cursor: pointer;
-    }
-</style>
 <div class="container-fluid pb-3">
 	<div class="card shadow mb-0">
 		<div class="card-body">

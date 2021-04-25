@@ -106,10 +106,10 @@ class C_category extends CI_Controller
             $validate = Validate([
                 'name' => 'required|min:3|name',
             ]);
-            $cat = $this->db->select('slug')->from($this->table)->where('slug', str_replace(" ", '-', strtolower(Input_('name'))))->get()->row();
-            if ($cat) $validate = ValidateAdd($validate, 'name', 'Kategori sudah ada');
+            $cat = $this->db->select('id, slug')->from($this->table)->where('slug', str_replace(" ", '-', strtolower(Input_('name'))))->get()->row();
+            if ($cat && $this->req->acak($cat->id) != Input_('id')) $validate = ValidateAdd($validate, 'name', 'Kategori sudah ada');
             if (!$validate['success']) throw new Exception("Error Processing Request");
-            if (!Update($this->table, Guard($validate['data'], ['id', 'token', 'password', 'active']), [$this->req->encKey('id') => Input_('id')])) throw new Exception("Tidak ada perubahan");
+            if (!Update($this->table, $validate['data'], [$this->req->encKey('id') => Input_('id')])) throw new Exception("Tidak ada perubahan");
 
             $message = [
                 'status' => 'ok',

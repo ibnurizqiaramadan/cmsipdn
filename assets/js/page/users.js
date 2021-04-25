@@ -56,7 +56,7 @@ $(document).ready((function () {
 			}
 		},
 		fnCreatedRow: function (nRow, aData, iDataIndex) {
-
+			$(nRow).attr('data-id', aData.id)
 		},
 		columns: dataColumnTable([
 			'id', 'username', 'name', 'role', 'active'

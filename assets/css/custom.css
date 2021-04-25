@@ -1,3 +1,19 @@
 .row-selected {
     background-color: rgb(242,242,242);
 }
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: #F4F6F9;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #999;
+	border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #343A40;
+}

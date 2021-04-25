@@ -17,7 +17,7 @@
 						<i class="fas fa-user-plus mr-1"> </i>Baru
 					</button>
 				</div>
-				<table id="listUser" class="table table-striped table-bordered" style="width:100%">
+				<table id="listUser" class="table table-bordered" style="width:100%">
 					<thead>
 						<tr>
 							<th></th>

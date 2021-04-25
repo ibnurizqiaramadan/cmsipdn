@@ -57,7 +57,7 @@ function initTable() {
 			}
 		},
 		fnCreatedRow: function (nRow, aData, iDataIndex) {
-
+			$(nRow).attr('data-id', aData.id)
 		},
 		columns: dataColumnTable([
 				'id', 
