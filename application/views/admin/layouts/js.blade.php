@@ -12,6 +12,7 @@
 <script src="{{ base_url('assets/modules/iziToast.min.js') }}" defer></script>
 <script src="{{ base_url('assets/modules/sweetalert2.all.min.js') }}" defer></script>
 <script src="{{ base_url('assets/js/module/moment.min.js') }}" defer></script>
+<script src="{{ base_url('assets/js/module/nanobar.min.js') }}" defer></script>
 <script src="{{ base_url('assets/js/module/jquery.validate.min.js') }}" defer></script>
 <script src="{{ base_url('assets/js/module/additional-methods.min.js') }}" defer></script>
 <script src="{{ base_url('assets/js/app.js') }}" defer></script>

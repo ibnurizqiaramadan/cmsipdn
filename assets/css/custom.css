@@ -17,3 +17,7 @@
 ::-webkit-scrollbar-thumb:hover {
 	background: #343A40;
 }
+
+.loadingGan .bar {
+	background: #4F92FF;
+}

@@ -26,6 +26,13 @@ function enableButton() {
 	$(":submit").find("span").remove(), $(":submit").removeAttr("disabled")
 }
 
+const nanobar = new Nanobar({
+	classname: "loadingGan",
+	id: "loadingGan"
+});
+nanobar.go(80);
+nanobar.go(100);
+
 function errorCode(event) {
 	iziToast.error({
 		title: "Error",
@@ -489,7 +496,7 @@ function loadPage(url, change = false) {
 	// if (url == currentPage) return typeof refreshData === 'function' && refreshData()
 	if (url == "#") return
 	clearInterval(refreshTableInterval)
-	$('.loadingNa').show()
+	nanobar.go(80)
 	currentPage = url
 	const e = $(`a.menu-item[href='${url.trim()}']`)
 	change == false && window.history.pushState("", "", url)
@@ -501,10 +508,10 @@ function loadPage(url, change = false) {
         $("#customJsNa").html($(data).filter('#customJsNa').html())
     }).fail(function(err) {
 		$("#contentId").html(`<div class="container">${err.statusText}</div>`)
-		$('.loadingNa').hide()
+		nanobar.go(100)
 		errorCode(err)
 	}).done(function() {
-		$('.loadingNa').hide()
+		nanobar.go(100)
 	})
 }
 
@@ -525,7 +532,7 @@ $(document).delegate('.roti', 'click', function(e) {
 	}
 })
  
-setInterval(function(){if (currentPage.replace(/#/g, '') != location.href.replace(/#/g, '')) (currentPage = location.href, loadPage(currentPage, true))}, 500);
+setInterval(function(){if (currentPage.replace(/#/g, '') != location.href.replace(/#/g, '')) (currentPage = location.href, loadPage(currentPage, true))}, 200);
 
 function escapeHtml(text) {
   var map = {

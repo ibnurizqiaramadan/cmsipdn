@@ -1,18 +1,7 @@
 @include('admin.layouts.head')
 @include('admin.layouts.js')
-<div class="loadingNa">
-	<div class="loadingGan">
-		<div class="ldio-xvietdzji3j">
-			<div></div>
-			<div></div>
-			<div>
-				<div></div>
-			</div>
-			<div>
-				<div></div>
-			</div>
-		</div>
-	</div>
+<div class="nanobar loadingGan" id="loadingGan" style="position: fixed;">
+    <div class="bar"></div>
 </div>
 <div id="customCss"></div>
 <body class="hold-transition sidebar-mini layout-fixed">

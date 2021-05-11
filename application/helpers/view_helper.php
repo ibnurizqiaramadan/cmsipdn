@@ -7,7 +7,6 @@ if (!function_exists('view')) {
     {
         $path = APPPATH;
         $blade = new Blade($path.'views', $path . 'cache/views');
-        echo str_replace(["\t", "\n"], "", $blade->make($view, $data));
-        // echo $blade->make($view, $data);
+        echo preg_replace('!\s+!', ' ', $blade->make($view, $data));
     }
 }
