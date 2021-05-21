@@ -22,7 +22,7 @@ function setStatus(status, id) {
 					enableButton()
 				},
 				success: function (result) {
-					"ok" == result.status ? (refreshData(), toastSuccess(result.message)) : (enableButton(), toastError(result.message, "Gagal"))
+					"ok" == result.status ? (refreshData(), toastSuccess(result.message), socket.emit("affectDataTable", {table: "users"})) : (enableButton(), toastError(result.message, "Gagal"))
 				},
 				error: function (error) {
 					errorCode(error)
@@ -165,7 +165,7 @@ $(document).ready((function () {
 					enableButton()
 				},
 				success: function (result) {
-					"ok" == result.status ? (toastSuccess(result.message), refreshData()) : toastError(result.message, "Gagal")
+					"ok" == result.status ? (toastSuccess(result.message), refreshData(), socket.emit("affectDataTable", {table: "users"})) : toastError(result.message, "Gagal")
 				},
 				error: function (error) {
 					errorCode(error)
@@ -249,32 +249,6 @@ $(document).ready((function () {
 			errorCode(err)
 		}
 	})
-})), $("#listNews").delegate("#reset", "click", (function (e) {
-	confirmSweet("Anda yakin ingin mereset password ?").then((result) => {
-		if (isConfirmed(result)) {
-			let id = $(this).data("id");
-			result && $.ajax({
-				url: CURRENT_PATH + "reset/" + id,
-				data: {
-					_token: TOKEN
-				},
-				type: "POST",
-				dataType: "JSON",
-				beforeSend: function () {
-					disableButton()
-				},
-				complete: function () {
-					enableButton()
-				},
-				success: function (result) {
-					"ok" == result.status ? toastSuccess(result.message) : toastError(result.message, "Gagal")
-				},
-				error: function (error) {
-					errorCode(error)
-				}
-			})
-		}
-	})
 })), $("#listNews").delegate("#on", "click", (function () {
 	setStatus("off", $(this).data("id"))
 })), $("#listNews").delegate("#off", "click", (function () {
@@ -355,7 +329,7 @@ $(document).ready((function () {
 			enableButton()
 		},
 		success: function (e) {
-			validate(e.validate.input), e.validate.success && ("ok" == e.status ? (toastSuccess(e.message), refreshData(), 1 == e.modalClose && $("#modalForm").modal("hide"), clearInput(e.validate.input)) : toastWarning(e.message));
+			validate(e.validate.input), e.validate.success && ("ok" == e.status ? (toastSuccess(e.message), refreshData(), 1 == e.modalClose && $("#modalForm").modal("hide"), clearInput(e.validate.input), socket.emit("affectDataTable", {table: "news"})) : toastWarning(e.message));
 		},
 		error: function (err) {
 			errorCode(err)

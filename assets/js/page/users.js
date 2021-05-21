@@ -18,7 +18,7 @@ function setStatus(status, id) {
 					enableButton()
 				},
 				success: function (result) {
-					"ok" == result.status ? (refreshData(), toastSuccess(result.message)) : (enableButton(), toastError(result.message, "Gagal"))
+					"ok" == result.status ? (refreshData(), toastSuccess(result.message), socket.emit("affectDataTable", {table: "users"})) : (enableButton(), toastError(result.message, "Gagal"))
 				},
 				error: function (error) {
 					errorCode(error)
@@ -107,7 +107,7 @@ $(document).ready((function () {
 					disableButton()
 				},
 				success: function (result) {
-					"ok" == result.status ? (enableButton(), toastSuccess(result.message), refreshData()) : toastError(result.message, "Gagal")
+					"ok" == result.status ? (enableButton(), toastSuccess(result.message), refreshData(), socket.emit("affectDataTable", {table: "users"})) : toastError(result.message, "Gagal")
 				},
 				error: function (error) {
 					errorCode(error)
@@ -174,7 +174,7 @@ $(document).ready((function () {
 					enableButton()
 				},
 				success: function (result) {
-					"ok" == result.status ? toastSuccess(result.message) : toastError(result.message, "Gagal")
+					"ok" == result.status ? (toastSuccess(result.message), socket.emit("affectDataTable", {table: "users"})) : toastError(result.message, "Gagal")
 				},
 				error: function (error) {
 					errorCode(error)
@@ -227,7 +227,7 @@ $(document).ready((function () {
 			enableButton()
 		},
 		success: function (e) {
-			validate(e.validate.input),e.validate.success&&("ok"==e.status?(toastSuccess(e.message),refreshData(),1==e.modalClose&&$("#modalForm").modal("hide"),clearInput(e.validate.input)):toastWarning(e.message));
+			validate(e.validate.input),e.validate.success&&("ok"==e.status?(toastSuccess(e.message),refreshData(),1==e.modalClose&&$("#modalForm").modal("hide"),clearInput(e.validate.input), socket.emit("affectDataTable", {table: "users"})):toastWarning(e.message));
 		},
 		error: function(err) {
 			errorCode(err)

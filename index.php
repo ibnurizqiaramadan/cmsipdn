@@ -58,6 +58,7 @@
 	date_default_timezone_set('Asia/Jakarta');
 	$base_url_ = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
 	$base_url_ .= "://" . $_SERVER['HTTP_HOST'];
+	define('ORIGIN_URL', $base_url_);
 	$base_url_ .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
 	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 	define('ADMIN_PATH', 'ruangadmin');

@@ -5,6 +5,10 @@ const BASE_URL = $('meta[name="baseUrl"]').attr("content"),
 	REFRESH_TABLE_TIME = 30000;
 var table, table1, CURRENT_PATH, refreshTableInterval;
 
+const socket = io.connect(`${location.origin}:6996`)
+
+socket.emit("join")
+
 moment.locale('id');
 
 function sleep(ms) {
@@ -383,7 +387,7 @@ $(document).delegate('a[id="itemFloat"]', 'click', function (e) {
 					enableButton()
 				},
 				success: function (result) {
-					"ok" == result.status ? (msgSweetSuccess(result.message), table.ajax.reload(null, false), $("#checkedListData").val("")) : msgSweetError(result.message)
+					"ok" == result.status ? (msgSweetSuccess(result.message), table.ajax.reload(null, false), $("#checkedListData").val(""), socket.emit("affectDataTable", {path: url})) : msgSweetError(result.message)
 				},
 				error: function (error) {
 					errorCode(error)
@@ -551,3 +555,7 @@ function dataColumnTable(data = []) {
 	data.forEach(field => result.push({data: field}))
 	return result
 }
+
+socket.on("refreshDataTable", param => {
+	if (CURRENT_PATH == param.table != undefined ? `${ADMIN_PATH}/${param.table}/` : param.path) refreshData()
+})
